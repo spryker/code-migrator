@@ -1,0 +1,29 @@
+{
+  "name": "spryker/code-sniffer",
+  "description": "Spryker Code Sniffer Standards",
+  "type": "library",
+  "license": "MIT",
+  "keywords": ["framework", "codesniffer", "phpcs", "standards"],
+  "homepage": "http://spryker.com",
+  "authors": [
+    {
+      "name": "Spryker",
+      "homepage": "http://spryker.com"
+    }
+  ],
+  "support": {
+    "source": "https://github.com/spryker/code-sniffer"
+  },
+  "autoload": {
+    "psr-4": {
+      "Spryker\\": "Spryker"
+    }
+  },
+  "require": {
+    "php": ">=5.4.16",
+    "squizlabs/php_codesniffer": "~2.5"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "~5.2"
+  }
+}
