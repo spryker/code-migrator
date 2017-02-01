@@ -1,3 +1,4 @@
+#!/usr/bin/env php
 <?php
 
 define('PROJECT_ROOT', realpath(__DIR__ . '/../../../../'));
