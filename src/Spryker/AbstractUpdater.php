@@ -14,6 +14,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 abstract class AbstractUpdater implements UpdaterInterface
 {
 
+    const MESSAGE_TEMPLATE_FILE_NAME = '<fg=yellow>%s</>';
+    const MESSAGE_MANUALLY = '<fg=red>You need to check this manually</>';
+
     /**
      * @var InputInterface
      */
@@ -41,6 +44,19 @@ abstract class AbstractUpdater implements UpdaterInterface
         $this->input = $input;
         $this->output = $output;
         $this->command = $command;
+    }
+
+    /**
+     * @param string $message
+     *
+     * @return void
+     */
+    protected function outputMessage($message)
+    {
+        $this->output->writeln($message);
+        if ($message === static::MESSAGE_MANUALLY) {
+            $this->output->writeln('');
+        }
     }
 
 }

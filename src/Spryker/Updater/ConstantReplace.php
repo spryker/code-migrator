@@ -10,13 +10,30 @@ namespace Spryker\Updater;
 use Spryker\AbstractUpdater;
 use Symfony\Component\Finder\SplFileInfo;
 
-class ConstantsReplace extends AbstractUpdater
+/**
+ * Specification:
+ * - Replaces one constant with another.
+ * - Adds use statement of new constant after the old constants use statement.
+ * - Automatically detects if NewBundleConstants exists in project and add this one.
+ * - If NewBundleConstants does not exists in project it adds the one from core.
+ *
+ * Configuration can be like this:
+ * ```
+ * $configuration = [
+ *      'OldBundleConstants::CONSTANT_NAME_A' => 'NewBundleConstants::CONSTANT_NAME_A',
+ * ];
+ * ```
+ */
+class ConstantReplace extends AbstractUpdater
 {
+
+    const MESSAGE_TEMPLATE_REPLACED_CONSTANT = 'Replaced "<fg=green>%s</>" with "<fg=green>%s</>"';
+    const MESSAGE_TEMPLATE_ADDED_USE = 'Added new use statement "<fg=green>use %s;</>" after "<fg=green>use %s;</>"';
 
     /**
      * @var array
      */
-    protected $searchAndReplace;
+    protected $configuration;
 
     /**
      * @var string
@@ -29,26 +46,22 @@ class ConstantsReplace extends AbstractUpdater
     protected $newUse;
 
     /**
-     * @param array $searchAndReplace
+     * @param array $configuration
      */
-    public function __construct(array $searchAndReplace)
+    public function __construct(array $configuration)
     {
-        $this->searchAndReplace = $searchAndReplace;
-
-        if (!defined('PROJECT_NAMESPACE')) {
-            define('PROJECT_NAMESPACE', 'Pyz');
-        }
+        $this->configuration = $configuration;
     }
 
     /**
-     * @param \Symfony\Component\Finder\SplFileInfo $fileInfoInfo
+     * @param \Symfony\Component\Finder\SplFileInfo $fileInfo
      * @param string $content
      *
      * @return string
      */
-    public function execute(SplFileInfo $fileInfoInfo, $content)
+    public function execute(SplFileInfo $fileInfo, $content)
     {
-        foreach ($this->searchAndReplace as $search => $replace) {
+        foreach ($this->configuration as $search => $replace) {
             if (preg_match('/' . $search . '/', $content)) {
                 $oldProjectUse = $this->buildConstantsClassName($search);
                 if (strpos($content, 'use ' . $oldProjectUse . ';') !== false) {
@@ -67,7 +80,10 @@ class ConstantsReplace extends AbstractUpdater
                 }
 
                 $content = str_replace($search, $replace, $content);
+                $this->outputConstantReplacedMessage($search, $replace);
+
                 $content = $this->addUseStatement($newUse, $addUseAfter, $content);
+                $this->outputAddedUseStatementMessage( $newUse, $addUseAfter);
             }
         }
 
@@ -113,6 +129,40 @@ class ConstantsReplace extends AbstractUpdater
         $replace = $search . PHP_EOL . 'use ' . $newUse . ';';
 
         return str_replace($search, $replace, $content);
+    }
+
+    /**
+     * @param string $search
+     * @param string $replace
+     *
+     * @return void
+     */
+    protected function outputConstantReplacedMessage($search, $replace)
+    {
+        $message = sprintf(
+            static::MESSAGE_TEMPLATE_REPLACED_CONSTANT,
+            $search,
+            $replace
+        );
+
+        $this->outputMessage($message);
+    }
+
+    /**
+     * @param string $newUse
+     * @param string $addUseAfter
+     *
+     * @return void
+     */
+    protected function outputAddedUseStatementMessage($newUse, $addUseAfter)
+    {
+        $message = sprintf(
+            static::MESSAGE_TEMPLATE_ADDED_USE,
+            $newUse,
+            $addUseAfter
+        );
+
+        $this->outputMessage($message);
     }
 
 }

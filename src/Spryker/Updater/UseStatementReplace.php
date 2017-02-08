@@ -10,20 +10,29 @@ namespace Spryker\Updater;
 use Spryker\AbstractUpdater;
 use Symfony\Component\Finder\SplFileInfo;
 
+/**
+ * Specification:
+ * - Replaces exact use statements (use Foo\Bar;), this should be used when you know there can't be an alias.
+ * - Replaces use statement starting with (use Foo\Bar{\Anything\Else}), this should be used when you need to replace multiple occurrences.
+ *
+ * Configuration can be like this:
+ */
 class UseStatementReplace extends AbstractUpdater
 {
+
+    const MESSAGE_TEMPLATE_REPLACED = 'Replaced "<fg=green>%s</>" with "<fg=green>%s</>"';
 
     /**
      * @var array
      */
-    protected $searchAndReplace;
+    protected $configuration;
 
     /**
-     * @param array $searchAndReplace
+     * @param array $configuration
      */
-    public function __construct(array $searchAndReplace)
+    public function __construct(array $configuration)
     {
-        $this->searchAndReplace = $searchAndReplace;
+        $this->configuration = $configuration;
     }
 
     /**
@@ -34,8 +43,12 @@ class UseStatementReplace extends AbstractUpdater
      */
     public function execute(SplFileInfo $fileInfo, $content)
     {
-        foreach ($this->searchAndReplace as $search => $replace) {
-            $content = str_replace($search, $replace, $content);
+        foreach ($this->configuration as $search => $replace) {
+            if (preg_match('/' . preg_quote($search) . '/', $content)) {
+                $content = str_replace($search, $replace, $content);
+                $message = sprintf(static::MESSAGE_TEMPLATE_REPLACED, rtrim($search, '\\'), rtrim($replace, '\\'));
+                $this->outputMessage($message);
+            }
         }
 
         return $content;

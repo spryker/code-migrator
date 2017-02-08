@@ -17,6 +17,18 @@ use Spryker\UpdaterInterface;
 
 class UpdaterCommand extends Command
 {
+    const OPTION_DRY = 'dry';
+    const OPTION_DRY_SHORT = 'd';
+
+    /**
+     * @var InputInterface
+     */
+    protected $input;
+
+    /**
+     * @var OutputInterface
+     */
+    protected $output;
 
     /**
      * @var AbstractUpdater[]
@@ -31,7 +43,7 @@ class UpdaterCommand extends Command
         $this
             ->setName('spryker:update')
             ->setDescription('Updates to the latest changes made by Spryker.')
-            ->addOption('dry', 'd', null, 'Use this option to see what will be changed.')
+            ->addOption(static::OPTION_DRY, static::OPTION_DRY_SHORT, null, 'Use this option to see what will be changed.')
         ;
     }
 
@@ -82,6 +94,9 @@ class UpdaterCommand extends Command
      */
     protected function runUpdater(SplFileInfo $fileInfo, InputInterface $input, OutputInterface $output)
     {
+        $this->input = $input;
+        $this->output = $output;
+
         $content = $fileInfo->getContents();
 
         foreach ($this->updater as $updater) {
@@ -101,8 +116,21 @@ class UpdaterCommand extends Command
     protected function save(SplFileInfo $fileInfo, $content)
     {
         if ($fileInfo->getContents() !== $content) {
-            file_put_contents($fileInfo->getPathname(), $content);
+            if (!$this->isDryRun()) {
+                file_put_contents($fileInfo->getPathname(), $content);
+            }
+            $this->output->writeln('<bg=yellow;fg=black>Saved new content to:</> <fg=green>' . $fileInfo->getPathname() . '</>');
+            $this->output->writeln('');
+
         }
+    }
+
+    /**
+     * @return bool
+     */
+    protected function isDryRun()
+    {
+        return ($this->input->hasOption(static::OPTION_DRY) && $this->input->getOption(static::OPTION_DRY));
     }
 
 

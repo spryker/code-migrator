@@ -1,17 +1,23 @@
 <?php
 
 /**
- * Copyright © 2017-present Spryker Systems GmbH. All rights reserved.
+ * Copyright © 2016-present Spryker Systems GmbH. All rights reserved.
  * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
  */
 
 namespace Unit\Spryker\Updater;
 
 use PHPUnit_Framework_TestCase;
-use Spryker\UpdaterInterface;
+use ReflectionClass;
 use Symfony\Component\Finder\SplFileInfo;
 
-abstract class AbstractUpdaterTest extends PHPUnit_Framework_TestCase
+/**
+ * @group Unit
+ * @group Spryker
+ * @group Updater
+ * @group AbstractTest
+ */
+abstract class AbstractTest extends PHPUnit_Framework_TestCase
 {
 
     /**
@@ -42,7 +48,7 @@ abstract class AbstractUpdaterTest extends PHPUnit_Framework_TestCase
      */
     protected function getFixtureDir()
     {
-        $reflectionClass = new \ReflectionClass($this);
+        $reflectionClass = new ReflectionClass($this);
         $fixtureDirectory = __DIR__ . '/Fixtures/' . $reflectionClass->getShortName() . '/';
 
         return $fixtureDirectory;

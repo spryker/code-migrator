@@ -1,16 +1,21 @@
 <?php
 
 /**
- * Copyright © 2017-present Spryker Systems GmbH. All rights reserved.
+ * Copyright © 2016-present Spryker Systems GmbH. All rights reserved.
  * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
  */
 
-
 namespace Unit\Spryker\Updater;
 
-use Spryker\Updater\ConstantsReplace;
+use Spryker\Updater\ConstantReplace;
 
-class ConstantsReplaceTest extends AbstractUpdaterTest
+/**
+ * @group Unit
+ * @group Spryker
+ * @group Updater
+ * @group ConstantReplaceTest
+ */
+class ConstantReplaceTest extends AbstractTest
 {
 
     const ADD_PROJECT_AFTER_PROJECT = 'add_project_after_project';
@@ -75,13 +80,13 @@ class ConstantsReplaceTest extends AbstractUpdaterTest
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|ConstantsReplace
+     * @return \PHPUnit_Framework_MockObject_MockObject|\Spryker\Updater\ConstantReplace
      */
     protected function getUpdater()
     {
-        $updaterMockBuilder = $this->getMockBuilder(ConstantsReplace::class)
+        $updaterMockBuilder = $this->getMockBuilder(ConstantReplace::class)
             ->setConstructorArgs([['ApplicationConstants::FOO_BAR' => 'KernelConstants::FOO_BAR']])
-            ->setMethods(['existsNewConstantClassInProject']);
+            ->setMethods(['existsNewConstantClassInProject', 'outputMessage']);
 
         return $updaterMockBuilder->getMock();
     }
