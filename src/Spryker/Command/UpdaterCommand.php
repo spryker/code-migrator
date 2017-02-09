@@ -73,7 +73,7 @@ class UpdaterCommand extends Command
     protected function getFinder()
     {
         $finder = new Finder();
-        $finder->files()->in([PROJECT_ROOT . '/src', PROJECT_ROOT . '/config']);
+        $finder->files()->in([PROJECT_ROOT . '/src', PROJECT_ROOT . '/config', PROJECT_ROOT . '/tests']);
 
         return $finder;
     }

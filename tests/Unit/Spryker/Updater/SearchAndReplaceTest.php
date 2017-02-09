@@ -7,7 +7,7 @@
 
 namespace Unit\Spryker\Updater;
 
-use Spryker\Updater\UseStatementReplace;
+use Spryker\Updater\SearchAndReplace;
 
 /**
  * @group Unit
@@ -15,7 +15,7 @@ use Spryker\Updater\UseStatementReplace;
  * @group Updater
  * @group UseStatementReplaceTest
  */
-class UseStatementReplaceTest extends AbstractTest
+class SearchAndReplaceTest extends AbstractTest
 {
 
     const USE_STATEMENT_REPLACE_EXACTLY = 'use_statement_replace';
@@ -30,6 +30,8 @@ class UseStatementReplaceTest extends AbstractTest
     const USE_SEARCH_ALIASED = 'use Foo\Bar\Baz\Zip;';
     const USE_REPLACE_ALIASED = 'use Zip\Baz\Bar\Foo as Zip;';
 
+    const DOC_BLOCK_REPLACE = 'doc_block_replace';
+
     /**
      * Exact in this context means a complete code line e.g.:
      * use Foo\Bar\Baz\Bat;
@@ -38,7 +40,7 @@ class UseStatementReplaceTest extends AbstractTest
      */
     public function testExactUseStatementIsReplaced()
     {
-        $testFile = $this->getTestFile(self::USE_STATEMENT_REPLACE_EXACTLY);
+        $testFile = $this->getTestFile(static::USE_STATEMENT_REPLACE_EXACTLY);
 
         $updaterMock = $this->getUpdaterMock([static::USE_SEARCH_EXACTLY => static::USE_REPLACE_EXACTLY]);
         $expectedMessage = $this->getExpectedMessage(static::USE_SEARCH_EXACTLY, static::USE_REPLACE_EXACTLY);
@@ -57,7 +59,7 @@ class UseStatementReplaceTest extends AbstractTest
      */
     public function testUseStatementIsReplacedMultipleTime()
     {
-        $testFile = $this->getTestFile(self::USE_STATEMENT_REPLACE_PARTIALLY);
+        $testFile = $this->getTestFile(static::USE_STATEMENT_REPLACE_PARTIALLY);
 
         $updaterMock = $this->getUpdaterMock([static::USE_SEARCH_PARTIALLY => static::USE_REPLACE_PARTIALLY]);
         $expectedMessage = $this->getExpectedMessage(static::USE_SEARCH_PARTIALLY, static::USE_REPLACE_PARTIALLY);
@@ -72,7 +74,7 @@ class UseStatementReplaceTest extends AbstractTest
      */
     public function testUseStatementIsReplacedAndAliased()
     {
-        $testFile = $this->getTestFile(self::USE_STATEMENT_REPLACE_ALIASED);
+        $testFile = $this->getTestFile(static::USE_STATEMENT_REPLACE_ALIASED);
 
         $updaterMock = $this->getUpdaterMock([static::USE_SEARCH_ALIASED => static::USE_REPLACE_ALIASED]);
         $expectedMessage = $this->getExpectedMessage(static::USE_SEARCH_ALIASED, static::USE_REPLACE_ALIASED);
@@ -83,13 +85,32 @@ class UseStatementReplaceTest extends AbstractTest
     }
 
     /**
+     * @return void
+     */
+    public function testDocBlocksReplaced()
+    {
+        $testFile = $this->getTestFile(static::DOC_BLOCK_REPLACE);
+
+        $configuration = [
+            '@var \Foo\Bar\Baz' => '@var \Baz\Bar\Foo',
+            '@param \Foo\Bar\Baz' => '@param \Baz\Bar\Foo',
+            '@method \Foo\Bar\Baz' => '@method \Baz\Bar\Foo',
+        ];
+        $updaterMock = $this->getUpdaterMock($configuration);
+        $updaterMock->expects($this->exactly(3))->method('outputMessage');
+        $content = $updaterMock->execute($testFile, $testFile->getContents());
+
+        $this->assertSame($this->getExpectedContent(static::DOC_BLOCK_REPLACE), $content);
+    }
+
+    /**
      * @param array $configuration
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject|\Spryker\Updater\UseStatementReplace
+     * @return \PHPUnit_Framework_MockObject_MockObject|\Spryker\Updater\SearchAndReplace
      */
     protected function getUpdaterMock(array $configuration)
     {
-        $mockBuilder = $this->getMockBuilder(UseStatementReplace::class);
+        $mockBuilder = $this->getMockBuilder(SearchAndReplace::class);
         $mockBuilder->setConstructorArgs([$configuration])
             ->setMethods(['outputMessage']);
 
@@ -105,7 +126,7 @@ class UseStatementReplaceTest extends AbstractTest
     protected function getExpectedMessage($search, $replace)
     {
         $expectedMessage = sprintf(
-            UseStatementReplace::MESSAGE_TEMPLATE_REPLACED,
+            SearchAndReplace::MESSAGE_TEMPLATE_REPLACED,
             rtrim($search, '\\'),
             rtrim($replace, '\\')
         );

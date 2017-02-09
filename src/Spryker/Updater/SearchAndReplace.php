@@ -17,7 +17,7 @@ use Symfony\Component\Finder\SplFileInfo;
  *
  * Configuration can be like this:
  */
-class UseStatementReplace extends AbstractUpdater
+class SearchAndReplace extends AbstractUpdater
 {
 
     const MESSAGE_TEMPLATE_REPLACED = 'Replaced "<fg=green>%s</>" with "<fg=green>%s</>"';
