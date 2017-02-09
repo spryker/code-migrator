@@ -29,7 +29,8 @@ use Symfony\Component\Finder\SplFileInfo;
 class MissingCodeFinder extends AbstractUpdater
 {
 
-    const MESSAGE_TEMPLATE_MISSING_CODE_BLOCK_FOUND = 'Missing code block found searched for "<fg=green>%s</>", you need to add the following code block manually';
+    const MESSAGE_TEMPLATE_MISSING_CODE_BLOCK_FOUND = 'Missing code block found, searched for "<fg=green>%s</>", you need to add the following code block manually';
+    const MESSAGE_TEMPLATE_CODE_BLOCK = '<fg=yellow>[<fg=red>CODE</>]</>' . PHP_EOL . '%s' . PHP_EOL . '<fg=yellow>[<fg=red>/CODE</>]</>';
 
     /**
      * @var array
@@ -52,11 +53,11 @@ class MissingCodeFinder extends AbstractUpdater
      */
     public function execute(SplFileInfo $fileInfo, $content)
     {
-        foreach ($this->configuration as $fileName => $options) {
-            if ($fileInfo->getFilename() === $fileName) {
+        foreach ($this->configuration as $filePathPattern => $options) {
+            if (preg_match('/' . preg_quote($filePathPattern, '/') . '/', $fileInfo->getPathname())) {
                 foreach ($options as $search => $codeBlock) {
                     if (!preg_match('/' . $search . '/', $content)) {
-                        $this->outputMessages($search, $fileInfo);
+                        $this->outputMessages($filePathPattern, $search, $fileInfo);
                     }
                 }
             }
@@ -66,16 +67,19 @@ class MissingCodeFinder extends AbstractUpdater
     }
 
     /**
+     * @param string $configKey
      * @param string $search
      * @param \Symfony\Component\Finder\SplFileInfo $fileInfo
      *
      * @return void
      */
-    protected function outputMessages($search, SplFileInfo $fileInfo)
+    protected function outputMessages($configKey, $search, SplFileInfo $fileInfo)
     {
         $message = sprintf(static::MESSAGE_TEMPLATE_MISSING_CODE_BLOCK_FOUND, $search);
         $this->outputMessage($message);
-        $this->outputMessage($this->configuration[$fileInfo->getFilename()][$search]);
+
+        $codeBlock = $this->configuration[$configKey][$search];
+        $this->outputMessage(sprintf(static::MESSAGE_TEMPLATE_CODE_BLOCK, $codeBlock));
 
         $message = sprintf(static::MESSAGE_TEMPLATE_FILE_NAME, $fileInfo->getPathname());
         $this->outputMessage($message);

@@ -49,7 +49,7 @@ class UseFinder extends AbstractUpdater
      */
     public function execute(SplFileInfo $fileInfo, $content)
     {
-        foreach ($this->configuration as $key => $value) { 
+        foreach ($this->configuration as $key => $value) {
             if (is_string($key)) {
                 $pattern = $key;
             } else {

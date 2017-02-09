@@ -22,6 +22,13 @@ class MissingCodeFinderTest extends AbstractTest
 
     const SEARCH_PATTERN = 'public function foo()';
 
+    const CODE_BLOCK = '
+public function foo()
+{
+    return \'bar\';
+}    
+    ';
+
     /**
      * @return void
      */
@@ -46,16 +53,15 @@ class MissingCodeFinderTest extends AbstractTest
         $testFile = $this->getTestFile(self::TEST_FILE_MISSING_CODE_BLOCK);
         $configuration = [
             $testFile->getFilename() => [
-                static::SEARCH_PATTERN => '
-public function foo()
-{
-    return \'bar\';
-}',
+                static::SEARCH_PATTERN => static::CODE_BLOCK,
             ],
         ];
         $expectedMessage = sprintf(MissingCodeFinder::MESSAGE_TEMPLATE_MISSING_CODE_BLOCK_FOUND, static::SEARCH_PATTERN);
         $updaterMock = $this->getUpdaterMock($configuration);
         $updaterMock->expects($this->at(0))->method('outputMessage')->with($this->equalTo($expectedMessage));
+
+        $expectedMessage = sprintf(MissingCodeFinder::MESSAGE_TEMPLATE_CODE_BLOCK, static::CODE_BLOCK);
+        $updaterMock->expects($this->at(1))->method('outputMessage')->with($this->equalTo($expectedMessage));
         $updaterMock->execute($testFile, $testFile->getContents());
     }
 

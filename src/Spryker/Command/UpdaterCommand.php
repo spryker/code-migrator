@@ -55,10 +55,15 @@ class UpdaterCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $this->input = $input;
+        $this->output = $output;
+
         $finder = $this->getFinder();
 
+        $output->writeln(sprintf('Start checking <fg=green>%d</> files...', $finder->count()));
+
         foreach ($finder as $fileInfo) {
-            $this->runUpdater($fileInfo, $input, $output);
+            $this->runUpdater($fileInfo);
         }
     }
 
@@ -87,24 +92,24 @@ class UpdaterCommand extends Command
 
     /**
      * @param \Symfony\Component\Finder\SplFileInfo $fileInfo
-     * @param \Symfony\Component\Console\Input\InputInterface $input
-     * @param \Symfony\Component\Console\Output\OutputInterface $output
      *
      * @return void
      */
-    protected function runUpdater(SplFileInfo $fileInfo, InputInterface $input, OutputInterface $output)
+    protected function runUpdater(SplFileInfo $fileInfo)
     {
-        $this->input = $input;
-        $this->output = $output;
-
         $content = $fileInfo->getContents();
 
         foreach ($this->updater as $updater) {
-            $updater->configure($input, $output, $this);
+            if (!$updater->accept($fileInfo)) {
+                continue;
+            }
+            $updater->configure($this->input, $this->output, $this);
             $content = $updater->execute($fileInfo, $content);
         }
 
-        $this->save($fileInfo, $content);
+        if ($content) {
+            $this->save($fileInfo, $content);
+        }
     }
 
     /**

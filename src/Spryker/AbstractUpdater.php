@@ -10,6 +10,8 @@ namespace Spryker;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
+use Symfony\Component\Finder\SplFileInfo;
 
 abstract class AbstractUpdater implements UpdaterInterface
 {
@@ -57,6 +59,31 @@ abstract class AbstractUpdater implements UpdaterInterface
         if ($message === static::MESSAGE_MANUALLY) {
             $this->output->writeln('');
         }
+    }
+
+    /**
+     * @param \Symfony\Component\Finder\SplFileInfo $fileInfo
+     *
+     * @return bool
+     */
+    public function accept(SplFileInfo $fileInfo)
+    {
+        return true;
+    }
+
+    /**
+     * @param string $question
+     * @param bool $default
+     *
+     * @return bool
+     */
+    protected function askQuestion($question, $default = false)
+    {
+        $inputInfo = ' [<fg=yellow>default</>: <fg=green>' . ($default ? 'yes' : 'no') . '</>] ';
+        $helper = $this->command->getHelper('question');
+        $question = new ConfirmationQuestion($question . $inputInfo, $default);
+
+        return $helper->ask($this->input, $this->output, $question);
     }
 
 }
