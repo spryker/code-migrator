@@ -54,10 +54,18 @@ class DuplicateConfigConstant extends AbstractUpdater
     public function execute(SplFileInfo $fileInfo, $content)
     {
         foreach ($this->configuration as $oldConstant => $newConstants) {
+            $searchConfig = preg_quote($this->buildConfig($oldConstant), '/');
+            $searchPatternConstantToDuplicate = '/^' . $searchConfig . '/m';
+            if (!preg_match($searchPatternConstantToDuplicate, $content)) {
+                continue;
+            }
+
             foreach ($newConstants as $newConstant) {
-                if (preg_match('/(?!\s$config[' . $oldConstant . '])/', $content) && !preg_match('/' . $newConstant . '/', $content)) {
-                    $this->outputMessage(sprintf(self::MESSAGE_TEMPLATE_INFO, $oldConstant, $fileInfo->getFilename()));
-                    if ($this->askIfBundleIsUsed($newConstant)) {
+                $addConfig = $this->buildConfigToAdd($newConstant);
+                $addConfigPattern = '/' . preg_quote($addConfig, '/') . '/';
+                if (!preg_match($addConfigPattern, $content)) {
+                    $additionalMessage = sprintf(self::MESSAGE_TEMPLATE_INFO, $oldConstant, $fileInfo->getFilename());
+                    if ($this->askIfBundleIsUsed($newConstant, $additionalMessage)) {
                         $content = $this->addMissingConfig($oldConstant, $newConstant, $content);
                         $content = $this->addMissingUseStatement($oldConstant, $newConstant, $content);
                     }
@@ -66,6 +74,26 @@ class DuplicateConfigConstant extends AbstractUpdater
         }
 
         return $content;
+    }
+
+    /**
+     * @param string $constant
+     *
+     * @return string
+     */
+    protected function buildConfig($constant)
+    {
+        return sprintf('$config[%s]', $constant);
+    }
+
+    /**
+     * @param string $constant
+     *
+     * @return string
+     */
+    protected function buildConfigToAdd($constant)
+    {
+        return sprintf('    = %s', $this->buildConfig($constant));
     }
 
     /**
@@ -84,14 +112,16 @@ class DuplicateConfigConstant extends AbstractUpdater
 
     /**
      * @param string $newConstant
+     * @param string $additionalMessage
      *
      * @return bool
      */
-    protected function askIfBundleIsUsed($newConstant)
+    protected function askIfBundleIsUsed($newConstant, $additionalMessage)
     {
         $bundleName = preg_replace('/Constants\:\:(.*)/', '', $newConstant);
+        $question = 'Are you using the "<fg=green>' . $bundleName . '</>" Bundle?';
 
-        return $this->askQuestion('Are you using the "<fg=green>' . $bundleName . '</>" Bundle?');
+        return $this->askQuestion($additionalMessage . PHP_EOL . $question);
     }
 
     /**
@@ -103,10 +133,15 @@ class DuplicateConfigConstant extends AbstractUpdater
      */
     protected function addMissingConfig($oldConstant, $newConstant, $content)
     {
-        $search = sprintf('$config[%s]', $oldConstant);
-        $replace = sprintf('%s' . PHP_EOL . '    = $config[%s]', $search, $newConstant);
+        $searchConfig = preg_quote($this->buildConfig($oldConstant), '/');
+        $searchPatternConstantToDuplicate = '/^' . $searchConfig . '/m';
 
-        $content = str_replace($search, $replace, $content);
+        $addConfig = $this->buildConfigToAdd($newConstant);
+
+        $replace = sprintf('%s' . PHP_EOL . '%s', $this->buildConfig($oldConstant), $addConfig);
+
+        $content = preg_replace($searchPatternConstantToDuplicate, $replace, $content);
+
         $this->outputMessage(sprintf(static::MESSAGE_TEMPLATE_ADDED_CONFIG, $newConstant, $oldConstant));
 
         return $content;

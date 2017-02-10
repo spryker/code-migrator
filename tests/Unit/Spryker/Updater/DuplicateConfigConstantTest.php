@@ -20,6 +20,7 @@ class DuplicateConfigConstantTest extends AbstractTest
     const TEST_FILE_NEW_CONSTANT_IN_PROJECT = 'contains_constant_new_constant_in_project';
     const TEST_FILE_NEW_CONSTANT_IN_CORE = 'contains_constant_new_constant_in_core';
     const DO_NOT_ADD_NEW_USE_WHEN_IT_EXISTS = 'do_not_add_new_use_when_it_exists';
+    const DO_NOT_ADD_WHEN_USED_AS_VALUE = 'do_not_add_when_used_as_value';
 
     const OLD_CONSTANT = 'ApplicationConstants::OLD_CONSTANT';
     const NEW_CONSTANT = 'OtherBundleConstants::NEW_CONSTANT';
@@ -38,7 +39,7 @@ class DuplicateConfigConstantTest extends AbstractTest
         $updaterMock = $this->getUpdaterMock($configuration);
         $updaterMock->method('accept')->willReturn(true);
         $updaterMock->method('askQuestion')->willReturn(false);
-        $updaterMock->expects($this->once())->method('outputMessage');
+        $updaterMock->expects($this->never())->method('outputMessage');
         $updaterMock->execute($testFile, $testFile->getContents());
     }
 
@@ -68,7 +69,7 @@ class DuplicateConfigConstantTest extends AbstractTest
         $updaterMock->method('accept')->willReturn(true);
         $updaterMock->method('askQuestion')->willReturn(true);
         $expectedMessage = sprintf(DuplicateConfigConstant::MESSAGE_TEMPLATE_ADDED_CONFIG, static::NEW_CONSTANT, static::OLD_CONSTANT);
-        $updaterMock->expects($this->at(2))->method('outputMessage')->with($this->equalTo($expectedMessage));
+        $updaterMock->expects($this->at(1))->method('outputMessage')->with($this->equalTo($expectedMessage));
         $updaterMock->execute($testFile, $testFile->getContents());
     }
 
@@ -91,7 +92,7 @@ class DuplicateConfigConstantTest extends AbstractTest
         $newUseStatement = 'Pyz\Shared\OtherBundle\OtherBundleConstants';
         $addUseAfter = 'Spryker\Shared\Application\ApplicationConstants';
         $expectedMessage = sprintf(DuplicateConfigConstant::MESSAGE_TEMPLATE_ADDED_USE, $newUseStatement, $addUseAfter);
-        $updaterMock->expects($this->at(4))->method('outputMessage')->with($this->equalTo($expectedMessage));
+        $updaterMock->expects($this->at(3))->method('outputMessage')->with($this->equalTo($expectedMessage));
 
         $content = $updaterMock->execute($testFile, $testFile->getContents());
 
@@ -117,7 +118,7 @@ class DuplicateConfigConstantTest extends AbstractTest
         $newUseStatement = 'Spryker\Shared\OtherBundle\OtherBundleConstants';
         $addUseAfter = 'Spryker\Shared\Application\ApplicationConstants';
         $expectedMessage = sprintf(DuplicateConfigConstant::MESSAGE_TEMPLATE_ADDED_USE, $newUseStatement, $addUseAfter);
-        $updaterMock->expects($this->at(4))->method('outputMessage')->with($this->equalTo($expectedMessage));
+        $updaterMock->expects($this->at(3))->method('outputMessage')->with($this->equalTo($expectedMessage));
 
         $content = $updaterMock->execute($testFile, $testFile->getContents());
 
@@ -127,7 +128,7 @@ class DuplicateConfigConstantTest extends AbstractTest
     /**
      * @return void
      */
-    public function testUseIsNotAddedWhenItAlreadyExistsInCoreCoreUseIsAdded()
+    public function testUseIsNotAddedWhenItAlreadyExists()
     {
         $testFile = $this->getTestFile(static::DO_NOT_ADD_NEW_USE_WHEN_IT_EXISTS);
 
@@ -143,6 +144,27 @@ class DuplicateConfigConstantTest extends AbstractTest
         $content = $updaterMock->execute($testFile, $testFile->getContents());
 
         $this->assertSame($this->getExpectedContent(static::DO_NOT_ADD_NEW_USE_WHEN_IT_EXISTS), $content);
+    }
+
+    /**
+     * @return void
+     */
+    public function testOnlyDuplicateIfUsedAsKey()
+    {
+        $testFile = $this->getTestFile(static::DO_NOT_ADD_WHEN_USED_AS_VALUE);
+
+        $configuration = [
+            static::OLD_CONSTANT => [static::NEW_CONSTANT],
+        ];
+
+        $updaterMock = $this->getUpdaterMock($configuration);
+        $updaterMock->method('accept')->willReturn(true);
+        $updaterMock->method('askQuestion')->willReturn(true);
+        $updaterMock->method('existsNewConstantClassInProject')->willReturn(false);
+
+        $content = $updaterMock->execute($testFile, $testFile->getContents());
+
+        $this->assertSame($this->getExpectedContent(static::DO_NOT_ADD_WHEN_USED_AS_VALUE), $content);
     }
 
     /**
