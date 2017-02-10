@@ -77,7 +77,7 @@ abstract class AbstractUpdater implements UpdaterInterface
      *
      * @return bool
      */
-    protected function askQuestion($question, $default = false)
+    protected function askQuestion($question, $default = true)
     {
         $inputInfo = ' [<fg=yellow>default</>: <fg=green>' . ($default ? 'yes' : 'no') . '</>] ';
         $helper = $this->command->getHelper('question');

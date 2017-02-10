@@ -55,7 +55,7 @@ class DuplicateConfigConstant extends AbstractUpdater
     {
         foreach ($this->configuration as $oldConstant => $newConstants) {
             foreach ($newConstants as $newConstant) {
-                if (preg_match('/' . $oldConstant . '/', $content) && !preg_match('/' . $newConstant . '/', $content)) {
+                if (preg_match('/(?!\s$config[' . $oldConstant . '])/', $content) && !preg_match('/' . $newConstant . '/', $content)) {
                     $this->outputMessage(sprintf(self::MESSAGE_TEMPLATE_INFO, $oldConstant, $fileInfo->getFilename()));
                     if ($this->askIfBundleIsUsed($newConstant)) {
                         $content = $this->addMissingConfig($oldConstant, $newConstant, $content);
@@ -151,6 +151,9 @@ class DuplicateConfigConstant extends AbstractUpdater
      */
     protected function addUseStatement($newUse, $addUseAfter, $content)
     {
+        if (preg_match('/use ' . preg_quote($newUse, '/') . ';/', $content)) {
+            return $content;
+        }
         $search = 'use ' . $addUseAfter . ';';
         $replace = $search . PHP_EOL . 'use ' . $newUse . ';';
 

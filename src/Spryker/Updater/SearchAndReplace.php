@@ -44,7 +44,7 @@ class SearchAndReplace extends AbstractUpdater
     public function execute(SplFileInfo $fileInfo, $content)
     {
         foreach ($this->configuration as $search => $replace) {
-            if (preg_match('/' . preg_quote($search) . '/', $content)) {
+            if (preg_match('/' . preg_quote($search, '/') . '/', $content)) {
                 $content = str_replace($search, $replace, $content);
                 $message = sprintf(static::MESSAGE_TEMPLATE_REPLACED, rtrim($search, '\\'), rtrim($replace, '\\'));
                 $this->outputMessage($message);

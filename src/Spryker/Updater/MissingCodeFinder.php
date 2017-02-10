@@ -56,7 +56,7 @@ class MissingCodeFinder extends AbstractUpdater
         foreach ($this->configuration as $filePathPattern => $options) {
             if (preg_match('/' . preg_quote($filePathPattern, '/') . '/', $fileInfo->getPathname())) {
                 foreach ($options as $search => $codeBlock) {
-                    if (!preg_match('/' . $search . '/', $content)) {
+                    if (!preg_match('/' . preg_quote($search, '/') . '/', $content)) {
                         $this->outputMessages($filePathPattern, $search, $fileInfo);
                     }
                 }

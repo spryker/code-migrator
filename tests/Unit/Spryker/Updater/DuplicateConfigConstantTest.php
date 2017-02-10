@@ -19,6 +19,8 @@ class DuplicateConfigConstantTest extends AbstractTest
 
     const TEST_FILE_NEW_CONSTANT_IN_PROJECT = 'contains_constant_new_constant_in_project';
     const TEST_FILE_NEW_CONSTANT_IN_CORE = 'contains_constant_new_constant_in_core';
+    const DO_NOT_ADD_NEW_USE_WHEN_IT_EXISTS = 'do_not_add_new_use_when_it_exists';
+
     const OLD_CONSTANT = 'ApplicationConstants::OLD_CONSTANT';
     const NEW_CONSTANT = 'OtherBundleConstants::NEW_CONSTANT';
 
@@ -120,6 +122,27 @@ class DuplicateConfigConstantTest extends AbstractTest
         $content = $updaterMock->execute($testFile, $testFile->getContents());
 
         $this->assertSame($this->getExpectedContent(static::TEST_FILE_NEW_CONSTANT_IN_CORE), $content);
+    }
+
+    /**
+     * @return void
+     */
+    public function testUseIsNotAddedWhenItAlreadyExistsInCoreCoreUseIsAdded()
+    {
+        $testFile = $this->getTestFile(static::DO_NOT_ADD_NEW_USE_WHEN_IT_EXISTS);
+
+        $configuration = [
+            static::OLD_CONSTANT => [static::NEW_CONSTANT],
+        ];
+
+        $updaterMock = $this->getUpdaterMock($configuration);
+        $updaterMock->method('accept')->willReturn(true);
+        $updaterMock->method('askQuestion')->willReturn(true);
+        $updaterMock->method('existsNewConstantClassInProject')->willReturn(false);
+
+        $content = $updaterMock->execute($testFile, $testFile->getContents());
+
+        $this->assertSame($this->getExpectedContent(static::DO_NOT_ADD_NEW_USE_WHEN_IT_EXISTS), $content);
     }
 
     /**

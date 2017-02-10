@@ -83,7 +83,6 @@ class ConstantReplace extends AbstractUpdater
                 $this->outputConstantReplacedMessage($search, $replace);
 
                 $content = $this->addUseStatement($newUse, $addUseAfter, $content);
-                $this->outputAddedUseStatementMessage( $newUse, $addUseAfter);
             }
         }
 
@@ -125,10 +124,16 @@ class ConstantReplace extends AbstractUpdater
      */
     protected function addUseStatement($newUse, $addUseAfter, $content)
     {
+        if (preg_match('/use ' . preg_quote($newUse, '/') . ';/', $content)) {
+            return $content;
+        }
         $search = 'use ' . $addUseAfter . ';';
         $replace = $search . PHP_EOL . 'use ' . $newUse . ';';
 
-        return str_replace($search, $replace, $content);
+        $content = str_replace($search, $replace, $content);
+        $this->outputAddedUseStatementMessage($newUse, $addUseAfter);
+
+        return $content;
     }
 
     /**

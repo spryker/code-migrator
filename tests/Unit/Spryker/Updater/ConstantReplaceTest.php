@@ -22,6 +22,7 @@ class ConstantReplaceTest extends AbstractTest
     const ADD_PROJECT_AFTER_CORE = 'add_project_after_core';
     const ADD_CORE_AFTER_PROJECT = 'add_core_after_project';
     const ADD_CORE_AFTER_CORE = 'add_core_after_core';
+    const DO_NOT_ADD_NEW_USE_WHEN_IT_EXISTS = 'do_not_add_new_use_when_it_exists';
 
     /**
      * @return void
@@ -31,10 +32,10 @@ class ConstantReplaceTest extends AbstractTest
         $updaterMock = $this->getUpdater();
         $updaterMock->method('existsNewConstantClassInProject')->willReturn(true);
 
-        $testFile = $this->getTestFile(self::ADD_PROJECT_AFTER_PROJECT);
+        $testFile = $this->getTestFile(static::ADD_PROJECT_AFTER_PROJECT);
         $content = $updaterMock->execute($testFile, $testFile->getContents());
 
-        $this->assertSame($this->getExpectedContent(self::ADD_PROJECT_AFTER_PROJECT), $content);
+        $this->assertSame($this->getExpectedContent(static::ADD_PROJECT_AFTER_PROJECT), $content);
     }
 
     /**
@@ -45,10 +46,10 @@ class ConstantReplaceTest extends AbstractTest
         $updaterMock = $this->getUpdater();
         $updaterMock->method('existsNewConstantClassInProject')->willReturn(true);
 
-        $testFile = $this->getTestFile(self::ADD_PROJECT_AFTER_CORE);
+        $testFile = $this->getTestFile(static::ADD_PROJECT_AFTER_CORE);
         $content = $updaterMock->execute($testFile, $testFile->getContents());
 
-        $this->assertSame($this->getExpectedContent(self::ADD_PROJECT_AFTER_CORE), $content);
+        $this->assertSame($this->getExpectedContent(static::ADD_PROJECT_AFTER_CORE), $content);
     }
 
     /**
@@ -59,7 +60,7 @@ class ConstantReplaceTest extends AbstractTest
         $updaterMock = $this->getUpdater();
         $updaterMock->method('existsNewConstantClassInProject')->willReturn(false);
 
-        $testFile = $this->getTestFile(self::ADD_CORE_AFTER_PROJECT);
+        $testFile = $this->getTestFile(static::ADD_CORE_AFTER_PROJECT);
         $content = $updaterMock->execute($testFile, $testFile->getContents());
 
         $this->assertSame($this->getExpectedContent(self::ADD_CORE_AFTER_PROJECT), $content);
@@ -73,10 +74,24 @@ class ConstantReplaceTest extends AbstractTest
         $updaterMock = $this->getUpdater();
         $updaterMock->method('existsNewConstantClassInProject')->willReturn(false);
 
-        $testFile = $this->getTestFile(self::ADD_CORE_AFTER_CORE);
+        $testFile = $this->getTestFile(static::ADD_CORE_AFTER_CORE);
         $content = $updaterMock->execute($testFile, $testFile->getContents());
 
         $this->assertSame($this->getExpectedContent(self::ADD_CORE_AFTER_CORE), $content);
+    }
+
+    /**
+     * @return void
+     */
+    public function testUseIsNotAddedWhenItAlreadyExists()
+    {
+        $updaterMock = $this->getUpdater();
+        $updaterMock->method('existsNewConstantClassInProject')->willReturn(false);
+
+        $testFile = $this->getTestFile(static::DO_NOT_ADD_NEW_USE_WHEN_IT_EXISTS);
+        $content = $updaterMock->execute($testFile, $testFile->getContents());
+
+        $this->assertSame($this->getExpectedContent(static::DO_NOT_ADD_NEW_USE_WHEN_IT_EXISTS), $content);
     }
 
     /**

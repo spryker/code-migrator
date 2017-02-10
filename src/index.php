@@ -54,7 +54,7 @@ $constantRemoved = new ConstantRemoved([
 /**
  * Replaces use statements
  */
-$useStatementReplace = new SearchAndReplace([
+$searchAndReplace = new SearchAndReplace([
     'use Spryker\Zed\Acl\Communication\Plugin\Installer as AclInstallerPlugin' => 'use Spryker\Zed\Acl\Communication\Plugin\AclInstallerPlugin',
     'use Spryker\Zed\Country\Communication\Plugin\Installer as CountryInstallerPlugin' => 'use Spryker\Zed\Country\Communication\Plugin\CountryInstallerPlugin',
     'use Spryker\Zed\Glossary\Communication\Plugin\Installer as GlossaryInstallerPlugin' => 'use Spryker\Zed\Glossary\Communication\Plugin\GlossaryInstallerPlugin',
@@ -135,6 +135,10 @@ $useStatementReplace = new SearchAndReplace([
     'use Spryker\Zed\Application\Communication\Controller\AbstractController;' => 'use Spryker\Zed\Kernel\Communication\Controller\AbstractController;',
     'parent::__construct($importerCollection, $dataDirectory);' => 'parent::__construct($utilDataReaderService, $importerCollection, $dataDirectory);',
     'public function __construct(array $importerCollection, $dataDirectory' => 'public function __construct(UtilDataReaderServiceInterface $utilDataReaderService, array $importerCollection, $dataDirectory',
+    'use Spryker\Shared\Library\DataDirectory;' => 'use Spryker\Shared\Kernel\Store;',
+    'DataDirectory::getLocalStoreSpecificPath(\'cache/Zed/twig\');' => 'APPLICATION_ROOT_DIR . \'/data/\' . Store::getInstance()->getStoreName() . \'/cache/Zed/twig\';',
+    'DataDirectory::getLocalStoreSpecificPath(\'cache/Yves/twig\');' => 'APPLICATION_ROOT_DIR . \'/data/\' . Store::getInstance()->getStoreName() . \'/cache/Yves/twig\';',
+    'DataDirectory::getLocalStoreSpecificPath(\'cache/profiler\');' => 'APPLICATION_ROOT_DIR . \'/data/\' . Store::getInstance()->getStoreName() . \'/cache/profiler\';',
 ]);
 
 
@@ -146,8 +150,8 @@ $useFinder = new UseFinder([
     'Spryker\\\\Shared\\\\Library\\\\DataDirectory' => 'You need to replace the usage with e.g. APPLICATION_ROOT_DIR . \'/data/\' . Store::getInstance()->getStoreName() . \'/foo/bar\'',
     'use Spryker\\\\Zed\\\\Messenger\\\\Business\\\\Model\\\\MessengerInterface' => 'UseStatementReplace was not able to replace this use statement, maybe you use this with an alias',
     'use Pyz\\\\Yves\\\\Product\\\\Plugin\\\\TwigProductImagePlugin',
-    'public function getCheckSteps(' => 'You can remove this method, use proper CI for testing',
-    'new ApplicationIntegrationCheckConsole()' => 'You can remove this code this is no longer used',
+    'public function getCheckSteps\(' => 'You can remove this method, use proper CI for testing',
+    'new ApplicationIntegrationCheckConsole\(\)' => 'You can remove this code this is no longer used',
 ]);
 
 
@@ -363,13 +367,13 @@ $removeFile = new RemoveFile([
     'Pyz/Yves/Product/Plugin/TwigProductImagePlugin.php',
 ]);
 
-//$updaterCommand->addUpdater($constantReplace);
-//$updaterCommand->addUpdater($constantRemoved);
-//$updaterCommand->addUpdater($useStatementReplace);
-//$updaterCommand->addUpdater($useFinder);
-//$updaterCommand->addUpdater($missingCodeFinder);
+$updaterCommand->addUpdater($constantReplace);
+$updaterCommand->addUpdater($constantRemoved);
+$updaterCommand->addUpdater($searchAndReplace);
+$updaterCommand->addUpdater($useFinder);
+$updaterCommand->addUpdater($missingCodeFinder);
 
-//$updaterCommand->addUpdater($duplicateConstantUpdater);
+$updaterCommand->addUpdater($duplicateConstantUpdater);
 
 $updaterCommand->addUpdater($removeFile);
 
