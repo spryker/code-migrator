@@ -45,6 +45,11 @@ class SearchAndReplace extends AbstractUpdater
     {
         foreach ($this->configuration as $search => $replace) {
             if (preg_match('/' . preg_quote($search, '/') . '/', $content)) {
+
+                if (preg_match('/' . preg_quote($replace, '/') . '/', $content)) {
+                    $replace = '';
+                }
+
                 $content = str_replace($search, $replace, $content);
                 $message = sprintf(static::MESSAGE_TEMPLATE_REPLACED, rtrim($search, '\\'), rtrim($replace, '\\'));
                 $this->outputMessage($message);

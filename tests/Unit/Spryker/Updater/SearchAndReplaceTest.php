@@ -31,6 +31,7 @@ class SearchAndReplaceTest extends AbstractTest
     const USE_REPLACE_ALIASED = 'use Zip\Baz\Bar\Foo as Zip;';
 
     const DOC_BLOCK_REPLACE = 'doc_block_replace';
+    const CONTENT_REPLACE = 'replace_content';
 
     /**
      * Exact in this context means a complete code line e.g.:
@@ -101,6 +102,22 @@ class SearchAndReplaceTest extends AbstractTest
         $content = $updaterMock->execute($testFile, $testFile->getContents());
 
         $this->assertSame($this->getExpectedContent(static::DOC_BLOCK_REPLACE), $content);
+    }
+
+    /**
+     * @return void
+     */
+    public function testContentIsReplaced()
+    {
+        $testFile = $this->getTestFile(static::CONTENT_REPLACE);
+
+        $configuration = [
+            'DataDirectory::getLocalStoreSpecificPath(\'cache/profiler\');' => 'APPLICATION_ROOT_DIR . \'/data/\' . Store::getInstance()->getStoreName() . \'/cache/profiler\';',
+        ];
+        $updaterMock = $this->getUpdaterMock($configuration);
+        $content = $updaterMock->execute($testFile, $testFile->getContents());
+
+        $this->assertSame($this->getExpectedContent(static::CONTENT_REPLACE), $content);
     }
 
     /**

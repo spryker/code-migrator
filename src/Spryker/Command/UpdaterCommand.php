@@ -13,7 +13,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
-use Spryker\UpdaterInterface;
 
 class UpdaterCommand extends Command
 {
@@ -73,7 +72,12 @@ class UpdaterCommand extends Command
     protected function getFinder()
     {
         $finder = new Finder();
-        $finder->files()->in([PROJECT_ROOT . '/src', PROJECT_ROOT . '/config', PROJECT_ROOT . '/tests']);
+        $finder->files()->in([
+            PROJECT_ROOT . '/public',
+            PROJECT_ROOT . '/src',
+            PROJECT_ROOT . '/config',
+            PROJECT_ROOT . '/tests',
+        ]);
 
         return $finder;
     }

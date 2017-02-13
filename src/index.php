@@ -6,6 +6,8 @@ define('PROJECT_NAMESPACE', 'Pyz');
 require_once PROJECT_ROOT . '/vendor/autoload.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
+use Spryker\Updater\ClassConstantAdder;
+use Spryker\Updater\ClassMethodAdder;
 use Spryker\Updater\ConstantRemoved;
 use Spryker\Updater\DuplicateConfigConstant;
 use Spryker\Updater\MissingCodeFinder;
@@ -39,6 +41,11 @@ $constantReplace = new ConstantReplace([
     'ApplicationConstants::LOG_LEVEL' => 'LogConstants::LOG_LEVEL',
     'ApplicationConstants::YVES_ERROR_PAGE' => 'ErrorHandlerConstants::YVES_ERROR_PAGE',
     'ApplicationConstants::ZED_ERROR_PAGE' => 'ErrorHandlerConstants::ZED_ERROR_PAGE',
+    'ApplicationConstants::TRANSFER_DEBUG_SESSION_FORWARD_ENABLED' => 'ZedRequestConstants::TRANSFER_DEBUG_SESSION_FORWARD_ENABLED',
+    'ApplicationConstants::TRANSFER_DEBUG_SESSION_NAME' => 'ZedRequestConstants::TRANSFER_DEBUG_SESSION_NAME',
+    'ApplicationConstants::ZED_API_SSL_ENABLED' => 'ZedRequestConstants::ZED_API_SSL_ENABLED',
+    'ApplicationConstants::ZED_SHOW_EXCEPTION_STACK_TRACE' => 'ErrorHandlerConstants::ERROR_RENDERER',
+    'ApplicationConstants::YVES_SHOW_EXCEPTION_STACK_TRACE' => 'ErrorHandlerConstants::ERROR_RENDERER',
 ]);
 
 
@@ -66,6 +73,7 @@ $searchAndReplace = new SearchAndReplace([
     'use Spryker\Zed\Tax\Communication\Plugin\ProductItemTaxRateCalculatorPlugin' => 'use Spryker\Zed\TaxProductConnector\Communication\Plugin\ProductItemTaxRateCalculatorPlugin',
     'use Spryker\Shared\Symfony\Plugin\ServiceProvider\DoubleSubmitProtectionServiceProvider' => 'use Spryker\Shared\Application\ServiceProvider\DoubleSubmitProtectionServiceProvider',
     'use Spryker\Shared\Collector\Code\KeyBuilder\\' => 'use Spryker\Shared\KeyBuilder\KeyBuilder\\',
+    'se Spryker\Zed\Application\Communication\Plugin\ServiceProvider\TwigServiceProvider as SprykerTwigServiceProvider;' => 'use Spryker\Zed\Twig\Communication\Plugin\ServiceProvider\TwigServiceProvider as SprykerTwigServiceProvider;',
     '@var \Spryker\Shared\Collector\Code\KeyBuilder\KeyBuilderInterface' => '@var \Spryker\Shared\KeyBuilder\KeyBuilderInterface',
     '@param \Spryker\Shared\Collector\Code\KeyBuilder\KeyBuilderInterface' => '@param \Spryker\Shared\KeyBuilder\KeyBuilderInterface',
     '@var \Spryker\Shared\Library\Storage\Adapter\KeyValue\ReadInterface' => '@var \Spryker\Zed\Collector\Business\Storage\Adapter\KeyValue\ReadInterface',
@@ -90,8 +98,10 @@ $searchAndReplace = new SearchAndReplace([
     '@return \Spryker\Yves\Application\Application' => '@return \Spryker\Yves\Kernel\Application',
     '@var \Spryker\Yves\Application\Application' => '@var \Spryker\Yves\Kernel\Application',
     '@param \Spryker\Yves\Application\Application' => '@param \Spryker\Yves\Kernel\Application',
+    'use Spryker\Shared\Library\Application\Environment;' => 'use Spryker\Shared\Config\Application\Environment;',
     'use Spryker\Yves\Application\Controller\AbstractController;' => 'use Spryker\Yves\Kernel\Controller\AbstractController;',
     'use Pyz\Yves\Application\Plugin\Provider\FlashMessengerServiceProvider;' => 'use Spryker\Yves\Messenger\Plugin\Provider\FlashMessengerServiceProvider;',
+    'use Pyz\Yves\Application\Business\Model\FlashMessengerInterface;' => 'use Spryker\Yves\Messenger\FlashMessenger\FlashMessengerInterface;',
     '@return \Pyz\Yves\Application\Business\Model\FlashMessengerInterface' => '@return \Spryker\Yves\Messenger\FlashMessenger\FlashMessengerInterface',
     'use Spryker\Zed\Propel\Business\Runtime\ActiveQuery\Criteria;' => 'use Spryker\Zed\PropelOrm\Business\Runtime\ActiveQuery\Criteria;',
     'use Spryker\Shared\Library\Twig\DateFormatterTwigExtension;' => 'use Spryker\Service\UtilDateTime\Model\DateTimeFormatterTwigExtension;',
@@ -111,9 +121,16 @@ $searchAndReplace = new SearchAndReplace([
     'use Spryker\Shared\Collector\Code\KeyBuilder\KeyBuilderInterface;' => 'use Spryker\Shared\KeyBuilder\KeyBuilderInterface;',
     'use Spryker\Shared\NewRelic\Api;' => 'use Spryker\Shared\NewRelicApi\NewRelicApi;',
     '@return \Spryker\Shared\NewRelic\ApiInterface' => '@return \Spryker\Shared\NewRelicApi\NewRelicApiInterface',
+    'use Spryker\Shared\Library\BatchIterator\XmlBatchIterator;' => 'use Spryker\Service\UtilDataReader\Model\BatchIterator\XmlBatchIterator;',
+    '@var \Spryker\Shared\Library\BatchIterator\XmlBatchIterator' => '@var \Spryker\Service\UtilDataReader\Model\BatchIterator\XmlBatchIterator',
+    '@param \Spryker\Shared\Library\BatchIterator\XmlBatchIterator' => '@param \Spryker\Service\UtilDataReader\Model\BatchIterator\XmlBatchIterator',
+    '@return \Spryker\Shared\Library\BatchIterator\XmlBatchIterator' => '@return \Spryker\Service\UtilDataReader\Model\BatchIterator\XmlBatchIterator',
+    'use Spryker\Shared\Library\BatchIterator\XmlBatchIteratorInterface;' => 'use Spryker\Service\UtilDataReader\Model\BatchIterator\XmlBatchIteratorInterface;',
+    '@var \Spryker\Shared\Library\BatchIterator\XmlBatchIteratorInterface' => '@var \Spryker\Service\UtilDataReader\Model\BatchIterator\XmlBatchIteratorInterface',
+    '@param \Spryker\Shared\Library\BatchIterator\XmlBatchIteratorInterface' => '@param \Spryker\Service\UtilDataReader\Model\BatchIterator\XmlBatchIteratorInterface',
+    '@return \Spryker\Shared\Library\BatchIterator\XmlBatchIteratorInterface' => '@return \Spryker\Service\UtilDataReader\Model\BatchIterator\XmlBatchIteratorInterface',
     'return new Api();' => 'return new NewRelicApi();',
     '$host = $request->server->get(\'COMPUTERNAME\', System::getHostname());' => '$host = $request->server->get(\'COMPUTERNAME\', $this->getFactory()->getUtilNetworkService()->getHostname());',
-    'use Spryker\Zed\Application\Communication\Plugin\ServiceProvider\TwigServiceProvider as SprykerTwigServiceProvider;' => 'use Spryker\Zed\Application\Communication\Plugin\ServiceProvider\TranslationServiceProvider;',
     '@return \Spryker\Zed\Kernel\Communication\Plugin\GatewayServiceProviderPlugin' => '@return \Spryker\Zed\ZedRequest\Communication\Plugin\GatewayServiceProviderPlugin',
     'use Spryker\Zed\Tax\Communication\Plugin\ProductItemTaxRateCalculatorPlugin;' => 'use Spryker\Zed\TaxProductConnector\Communication\Plugin\ProductItemTaxRateCalculatorPlugin;',
     'use Spryker\Zed\Console\Business\Model\Console as SprykerConsole;' => 'use Spryker\Zed\Kernel\Communication\Console\Console as SprykerConsole;',
@@ -121,9 +138,13 @@ $searchAndReplace = new SearchAndReplace([
     'return (new Connection())->get();' => 'return Propel::getConnection();',
     '@return \Spryker\Zed\Installer\Communication\Plugin\AbstractInstallerPlugin' => '@return \Spryker\Zed\Installer\Dependency\Plugin\InstallerPluginInterface',
     'use Spryker\Shared\Library\Reader\Csv\CsvReaderInterface;' => 'use Spryker\Service\UtilDataReader\Model\Reader\Csv\CsvReaderInterface;',
-    '@var \Spryker\Shared\Library\Reader\Csv\CsvReaderInterface' => '@var Spryker\Service\UtilDataReader\Model\Reader\Csv\CsvReaderInterface',
-    '@param \Spryker\Shared\Library\Reader\Csv\CsvReaderInterface' => '@param Spryker\Service\UtilDataReader\Model\Reader\Csv\CsvReaderInterface',
-    '@return \Spryker\Shared\Library\Reader\Csv\CsvReaderInterface' => '@return Spryker\Service\UtilDataReader\Model\Reader\Csv\CsvReaderInterface',
+    'use Spryker\Shared\Library\Reader\Csv\CsvReader;' => 'use Spryker\Service\UtilDataReader\Model\Reader\Csv\CsvReader;',
+    '@var \Spryker\Shared\Library\Reader\Csv\CsvReader' => '@var \Spryker\Service\UtilDataReader\Model\Reader\Csv\CsvReader',
+    '@param \Spryker\Shared\Library\Reader\Csv\CsvReader' => '@param \Spryker\Service\UtilDataReader\Model\Reader\Csv\CsvReader',
+    '@return \Spryker\Shared\Library\Reader\Csv\CsvReader' => '@return \Spryker\Service\UtilDataReader\Model\Reader\Csv\CsvReader',
+    '@var \Spryker\Shared\Library\Reader\Csv\CsvReaderInterface' => '@var \Spryker\Service\UtilDataReader\Model\Reader\Csv\CsvReaderInterface',
+    '@param \Spryker\Shared\Library\Reader\Csv\CsvReaderInterface' => '@param \Spryker\Service\UtilDataReader\Model\Reader\Csv\CsvReaderInterface',
+    '@return \Spryker\Shared\Library\Reader\Csv\CsvReaderInterface' => '@return \Spryker\Service\UtilDataReader\Model\Reader\Csv\CsvReaderInterface',
     '$this->csvReader->load($this->dataDirectory . \'/stocks.csv\');' => 'if (!$this->csvReader) {' . PHP_EOL . '            $this->csvReader = $this->utilDataReaderService->getCsvReader()->load($this->dataDirectory . \'/stocks.csv\');' . PHP_EOL . '    }',
     'CsvReader $csvReader,' => 'UtilDataReaderServiceInterface $utilDataReaderService,',
     '$this->csvReader = $csvReader;' => '$this->utilDataReaderService = $utilDataReaderService;',
@@ -136,9 +157,30 @@ $searchAndReplace = new SearchAndReplace([
     'parent::__construct($importerCollection, $dataDirectory);' => 'parent::__construct($utilDataReaderService, $importerCollection, $dataDirectory);',
     'public function __construct(array $importerCollection, $dataDirectory' => 'public function __construct(UtilDataReaderServiceInterface $utilDataReaderService, array $importerCollection, $dataDirectory',
     'use Spryker\Shared\Library\DataDirectory;' => 'use Spryker\Shared\Kernel\Store;',
-    'DataDirectory::getLocalStoreSpecificPath(\'cache/Zed/twig\');' => 'APPLICATION_ROOT_DIR . \'/data/\' . Store::getInstance()->getStoreName() . \'/cache/Zed/twig\';',
-    'DataDirectory::getLocalStoreSpecificPath(\'cache/Yves/twig\');' => 'APPLICATION_ROOT_DIR . \'/data/\' . Store::getInstance()->getStoreName() . \'/cache/Yves/twig\';',
-    'DataDirectory::getLocalStoreSpecificPath(\'cache/profiler\');' => 'APPLICATION_ROOT_DIR . \'/data/\' . Store::getInstance()->getStoreName() . \'/cache/profiler\';',
+    'DataDirectory::getLocalStoreSpecificPath(\'cache/Zed/twig\')' => 'APPLICATION_ROOT_DIR . \'/data/\' . Store::getInstance()->getStoreName() . \'/cache/Zed/twig\'',
+    'DataDirectory::getLocalStoreSpecificPath(\'cache/Yves/twig\')' => 'APPLICATION_ROOT_DIR . \'/data/\' . Store::getInstance()->getStoreName() . \'/cache/Yves/twig\'',
+    'DataDirectory::getLocalStoreSpecificPath(\'cache/profiler\')' => 'APPLICATION_ROOT_DIR . \'/data/\' . Store::getInstance()->getStoreName() . \'/cache/profiler\'',
+    '@return \Spryker\Shared\Library\DateFormatter' => '@return \Spryker\Service\UtilDateTime\UtilDateTimeServiceInterface',
+    'use Spryker\Shared\Library\System;' => '',
+    'use Spryker\Shared\Library\Context;' => '',
+    'use Spryker\Shared\Library\DateFormatter;' => '',
+    '$config[ApplicationConstants::ALLOW_INTEGRATION_CHECKS] = true;' => '',
+    '$config[ApplicationConstants::ALLOW_INTEGRATION_CHECKS] = false;' => '',
+    '$config[ApplicationConstants::TRANSFER_SSL] = false;' => '',
+    '$config[ApplicationConstants::TRANSFER_SSL] = true;' => '',
+    'use Spryker\Shared\Library\Application\Environment as ApplicationEnvironment;' => 'use Spryker\Shared\Config\Application\Environment as ApplicationEnvironment;',
+    '$config[ErrorHandlerConstants::ERROR_RENDERER] = true;' => '$config[ErrorHandlerConstants::ERROR_RENDERER] = WebHtmlErrorRenderer::class;',
+    '$config[ErrorHandlerConstants::ERROR_RENDERER] = false;' => '$config[ErrorHandlerConstants::ERROR_RENDERER] = WebExceptionErrorRenderer::class;',
+    'use Spryker\Zed\Kernel\Communication\Plugin\GatewayControllerListenerPlugin;' => 'use Spryker\Zed\ZedRequest\Communication\Plugin\GatewayControllerListenerPlugin;',
+    'use Spryker\Zed\Kernel\Communication\Plugin\GatewayServiceProviderPlugin;' => 'use Spryker\Zed\ZedRequest\Communication\Plugin\GatewayServiceProviderPlugin;',
+    'use Spryker\Zed\Application\Communication\Console\BuildNavigationConsole;' => 'use Spryker\Zed\Navigation\Communication\Console\BuildNavigationConsole;',
+    '$this->application->register(new MonologServiceProvider());' => '',
+    'namespace Pyz\Zed\Application\Communication;' => 'namespace Pyz\Zed\Application\Communication;' .  PHP_EOL .  PHP_EOL . 'use Spryker\Shared\Auth\AuthConstants;' . PHP_EOL . 'use Spryker\Shared\Config\Config;',
+    'define(\'APPLICATION\', \'YVES\');' => 'use Spryker\Shared\ErrorHandler\ErrorHandlerEnvironment;' . PHP_EOL . PHP_EOL . 'define(\'APPLICATION\', \'YVES\');',
+    'define(\'APPLICATION\', \'ZED\');' => 'use Spryker\Shared\ErrorHandler\ErrorHandlerEnvironment;' . PHP_EOL . PHP_EOL . 'define(\'APPLICATION\', \'ZED\');',
+    '$bootstrap = new YvesBootstrap();' => '$errorHandlerEnvironment = new ErrorHandlerEnvironment();' . PHP_EOL . '$errorHandlerEnvironment->initialize();' . PHP_EOL . PHP_EOL . '$bootstrap = new YvesBootstrap();',
+    '$bootstrap = new ZedBootstrap();' => '$errorHandlerEnvironment = new ErrorHandlerEnvironment();' . PHP_EOL . '$errorHandlerEnvironment->initialize();' . PHP_EOL . PHP_EOL . '$bootstrap = new ZedBootstrap();',
+    'return new DateFormatterTwigExtension($this->createDateFormatter());' => 'return new DateTimeFormatterTwigExtension($this->getUtilDateTimeService());',
 ]);
 
 
@@ -155,62 +197,9 @@ $useFinder = new UseFinder([
 ]);
 
 
-
 $missingCodeFinder = new MissingCodeFinder([
     'ApplicationDependencyProvider.php' => [
-        'protected function addUtilDateTimeService(Container $container)' => 'protected function addUtilDateTimeService(Container $container)
-{
-    $container[self::SERVICE_UTIL_DATE_TIME] = function (Container $container) {
-        return $container->getLocator()->utilDateTime()->service();
-    };
-
-    return $container;
-}',
-        'const SERVICE_UTIL_DATE_TIME = \'util date time service\';' => 'const SERVICE_UTIL_DATE_TIME = \'util date time service\';',
         '$container = $this->addUtilDateTimeService($container);' => '$container = $this->addUtilDateTimeService($container);',
-    ],
-    'CmsController.php' => [
-        'protected function renderView($viewPath, array $parameters = [])' => '
-/**
- * @param string $viewPath
- * @param array $parameters
- *
- * @return \Symfony\Component\HttpFoundation\Response
- */
-protected function renderView($viewPath, array $parameters = [])
-{
-    return $this->getApplication()->render($viewPath, $parameters);
-}
-        '
-    ],
-    'NewRelicDependencyProvider.php' => [
-        'const SERVICE_NETWORK = \'util network service\';' => 'const SERVICE_NETWORK = \'util network service\';',
-        'return $container->getLocator()->utilNetwork()->service();' => '
-/**
- * @param \Spryker\Yves\Kernel\Container $container
- *
- * @return \Spryker\Yves\Kernel\Container
- */
-public function provideDependencies(Container $container)
-{
-    $container[self::SERVICE_NETWORK] = function (Container $container) {
-        return $container->getLocator()->utilNetwork()->service();
-    };
-
-    return $container;
-}
-        '
-    ],
-    'NewRelicFactory.php' => [
-        'public function getUtilNetworkService()' => '
-/**
- * @return \Spryker\Service\UtilNetwork\UtilNetworkServiceInterface
- */
-public function getUtilNetworkService()
-{
-    return $this->getProvidedDependency(NewRelicDependencyProvider::SERVICE_NETWORK);
-}
-        '
     ],
     'Pyz/Zed/Application/ApplicationDependencyProvider.php' => [
         'new RedirectAfterLoginProvider()' => 'new RedirectAfterLoginProvider()',
@@ -221,30 +210,8 @@ public function getUtilNetworkService()
         'new NavigationServiceProvider()' => 'new NavigationServiceProvider()',
         'new PropelServiceProvider()' => 'new PropelServiceProvider()',
     ],
-    'ZedBootstrap.php' => [
-        'protected function isAuthenticationEnabled()' => '
-/**
- * @return bool
- */
-protected function isAuthenticationEnabled()
-{
-    return Config::get(AuthConstants::AUTH_ZED_ENABLED, true);
-}
-        ',
-    ],
-    'CheckoutDependencyProvider.php' => [
+    'Pyz/Zed/Checkout/CheckoutDependencyProvider.php' => [
         'new OmsPostSaveHookPlugin()' => 'new OmsPostSaveHookPlugin()',
-    ],
-    'CollectorBusinessFactory.php' => [
-        'protected function getUtilDataReaderService()' => '
-/**
- * @return \Spryker\Service\UtilDataReader\UtilDataReaderServiceInterface
- */
-protected function getUtilDataReaderService()
-{
-    return $this->getProvidedDependency(CollectorDependencyProvider::SERVICE_DATA);
-}
-        ',
     ],
     'CategoryNodeCollector.php' => [
         'parent::__construct($utilDataReaderService);' => 'parent::__construct($utilDataReaderService);',
@@ -264,51 +231,15 @@ protected function getUtilDataReaderService()
     'ProductConcreteCollector.php' => [
         'parent::__construct($utilDataReaderService);' => 'parent::__construct($utilDataReaderService);',
     ],
-    'CollectorDependencyProvider.php' => [
+    'Pyz/Zed/Collector/CollectorDependencyProvider.php' => [
         '$container[self::SERVICE_DATA] = function (Container $container) {' => '
 $container[self::SERVICE_DATA] = function (Container $container) {
     return $container->getLocator()->utilDataReader()->service();
 };
         ',
-        'const SERVICE_DATA = \'util data service\';' => 'const SERVICE_DATA = \'util data service\';',
     ],
-    'ConsoleDependencyProvider.php' => [
-        'protected function getEventSubscriber(Container $container)' => '
-/**
- * @param \Spryker\Zed\Kernel\Container $container
- *
- * @return \Symfony\Component\EventDispatcher\EventSubscriberInterface[]
- */
-protected function getEventSubscriber(Container $container)
-{
-    return [
-        $this->createNewRelicConsolePlugin()
-    ];
-}
-        ',
-        'protected function createNewRelicConsolePlugin()' => '
-/**
- * @return \Spryker\Zed\NewRelic\Communication\Plugin\NewRelicConsolePlugin
- */
-protected function createNewRelicConsolePlugin()
-{
-    return new NewRelicConsolePlugin();
-}
-        ',
-    ],
-    'Zed/Importer/Business/Factory/InstallerFactory.php' => [
-        'protected function getUtilDataReaderService()' => '
-/**
- * @return \Spryker\Service\UtilDataReader\UtilDataReaderServiceInterface
- */
-protected function getUtilDataReaderService()
-{
-    return $this->getProvidedDependency(ImporterDependencyProvider::SERVICE_DATA);
-}
-        ',
-    ],
+
     'UpdaterDependencyProvider.php' => [
-        'const SERVICE_UTIL_IO = \'util io service\';' => 'const SERVICE_UTIL_IO = \'util io service\';',
         '$container[static::SERVICE_UTIL_IO] = function (Container $container) {' => '
 $container[static::SERVICE_UTIL_IO] = function (Container $container) {
     return $container->getLocator()->utilDataReader()->service();
@@ -324,16 +255,141 @@ protected $utilDataReaderService;
         ',
     ],
     'ImporterDependencyProvider.php' => [
-        'const SERVICE_DATA = \'util data service\';' => 'const SERVICE_DATA = \'util data service\';',
         '$container[static::SERVICE_DATA] = function (Container $container) {' => '
 $container[static::SERVICE_DATA] = function (Container $container) {
     return $container->getLocator()->utilDataReader()->service();
 };
         ',
     ],
+    'public/Yves/index.php' => [
+        'new ErrorHandlerEnvironment()' => '$errorHandlerEnvironment = new ErrorHandlerEnvironment();
+$errorHandlerEnvironment->initialize();'
+    ],
+    'public/Zed/index.php' => [
+        'new ErrorHandlerEnvironment()' => '$errorHandlerEnvironment = new ErrorHandlerEnvironment();
+$errorHandlerEnvironment->initialize();'
+    ],
 ]);
 
+$constantAdder = new ClassConstantAdder([
+    'ImporterDependencyProvider.php' => [
+        'const SERVICE_DATA = \'util data service\';'
+    ],
+    'UpdaterDependencyProvider.php' => [
+        'const SERVICE_UTIL_IO = \'util io service\';',
+    ],
+    'CollectorDependencyProvider.php' => [
+        'const SERVICE_DATA = \'util data service\';',
+    ],
+    'NewRelicDependencyProvider.php' => [
+        'const SERVICE_NETWORK = \'util network service\';',
+    ],
+    'ApplicationDependencyProvider.php' => [
+        'const SERVICE_UTIL_DATE_TIME = \'util date time service\';'
+    ],
+]);
 
+$methodAdder = new ClassMethodAdder([
+    'Zed/Importer/Business/Factory/InstallerFactory.php' => [
+        'protected function getUtilDataReaderService()' => '    /**
+     * @return \Spryker\Service\UtilDataReader\UtilDataReaderServiceInterface
+     */
+    protected function getUtilDataReaderService()
+    {
+        return $this->getProvidedDependency(ImporterDependencyProvider::SERVICE_DATA);
+    }',
+    ],
+    'ConsoleDependencyProvider.php' => [
+        'protected function getEventSubscriber(Container $container)' => '    /**
+     * @param \Spryker\Zed\Kernel\Container $container
+     *
+     * @return \Symfony\Component\EventDispatcher\EventSubscriberInterface[]
+     */
+    protected function getEventSubscriber(Container $container)
+    {
+        return [
+            $this->createNewRelicConsolePlugin()
+        ];
+    }',
+        'protected function createNewRelicConsolePlugin()' => '    /**
+     * @return \Spryker\Zed\NewRelic\Communication\Plugin\NewRelicConsolePlugin
+     */
+    protected function createNewRelicConsolePlugin()
+    {
+        return new NewRelicConsolePlugin();
+    }',
+    ],
+    'CollectorBusinessFactory.php' => [
+        'protected function getUtilDataReaderService()' => '    /**
+     * @return \Spryker\Service\UtilDataReader\UtilDataReaderServiceInterface
+     */
+    protected function getUtilDataReaderService()
+    {
+        return $this->getProvidedDependency(CollectorDependencyProvider::SERVICE_DATA);
+    }',
+    ],
+    'ZedBootstrap.php' => [
+        'protected function isAuthenticationEnabled()' => '    /**
+     * @return bool
+     */
+    protected function isAuthenticationEnabled()
+    {
+        return Config::get(AuthConstants::AUTH_ZED_ENABLED, true);
+    }',
+    ],
+    'NewRelicFactory.php' => [
+        'public function getUtilNetworkService()' => '    /**
+     * @return \Spryker\Service\UtilNetwork\UtilNetworkServiceInterface
+     */
+    public function getUtilNetworkService()
+    {
+        return $this->getProvidedDependency(NewRelicDependencyProvider::SERVICE_NETWORK);
+    }'
+    ],
+    'NewRelicDependencyProvider.php' => [
+        'return $container->getLocator()->utilNetwork()->service();' => '    /**
+     * @param \Spryker\Yves\Kernel\Container $container
+     *
+     * @return \Spryker\Yves\Kernel\Container
+     */
+    public function provideDependencies(Container $container)
+    {
+        $container[self::SERVICE_NETWORK] = function (Container $container) {
+            return $container->getLocator()->utilNetwork()->service();
+        };
+
+        return $container;
+    }'
+    ],
+    'CmsController.php' => [
+        'protected function renderView($viewPath, array $parameters = [])' => '    /**
+     * @param string $viewPath
+     * @param array $parameters
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    protected function renderView($viewPath, array $parameters = [])
+    {
+        return $this->getApplication()->render($viewPath, $parameters);
+    }'
+    ],
+    'Pyz/Yves/Application/ApplicationDependencyProvider.php' => [
+        'protected function addUtilDateTimeService(Container $container)' => '    /**
+     * @param \Spryker\Yves\Kernel\Container $container
+     *
+     * @return \Spryker\Yves\Kernel\Container
+     */
+    protected function addUtilDateTimeService(Container $container)
+    {
+        $container[self::SERVICE_UTIL_DATE_TIME] = function (Container $container) {
+            return $container->getLocator()->utilDateTime()->service();
+        };
+
+        return $container;
+    }'
+    ],
+]);
+$updaterCommand->addUpdater($methodAdder);
 
 $duplicateConstantUpdater = new DuplicateConfigConstant([
     'ApplicationConstants::HOST_YVES' => [
@@ -356,6 +412,8 @@ $duplicateConstantUpdater = new DuplicateConfigConstant([
         'ZedRequestConstants::AUTH_ZED_ENABLED'
     ],
 ]);
+
+$updaterCommand->addUpdater($constantAdder);
 
 /**
  * Files which match fileNamePattern will be removed after user confirms
