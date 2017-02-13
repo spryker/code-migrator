@@ -78,6 +78,9 @@ class UpdaterCommand extends Command
             PROJECT_ROOT . '/config',
             PROJECT_ROOT . '/tests',
         ]);
+//        $finder->files()->in([
+//            PROJECT_ROOT . '/vendor/spryker/spryker/Bundles',
+//        ]);
 
         return $finder;
     }

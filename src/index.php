@@ -12,6 +12,7 @@ use Spryker\Updater\ConstantRemoved;
 use Spryker\Updater\DuplicateConfigConstant;
 use Spryker\Updater\MissingCodeFinder;
 use Spryker\Updater\RemoveFile;
+use Spryker\Updater\SearchAndRemove;
 use Spryker\Updater\UseFinder;
 use Spryker\Updater\SearchAndReplace;
 use Symfony\Component\Console\Application;
@@ -48,7 +49,6 @@ $constantReplace = new ConstantReplace([
     'ApplicationConstants::YVES_SHOW_EXCEPTION_STACK_TRACE' => 'ErrorHandlerConstants::ERROR_RENDERER',
 ]);
 
-
 /**
  * Constants removed
  */
@@ -56,7 +56,6 @@ $constantRemoved = new ConstantRemoved([
     'ApplicationConstants::TRANSFER_SSL',
     'ApplicationConstants::ALLOW_INTEGRATION_CHECKS' => 'Go to the mentioned file and remove the usage',
 ]);
-
 
 /**
  * Replaces use statements
@@ -73,7 +72,7 @@ $searchAndReplace = new SearchAndReplace([
     'use Spryker\Zed\Tax\Communication\Plugin\ProductItemTaxRateCalculatorPlugin' => 'use Spryker\Zed\TaxProductConnector\Communication\Plugin\ProductItemTaxRateCalculatorPlugin',
     'use Spryker\Shared\Symfony\Plugin\ServiceProvider\DoubleSubmitProtectionServiceProvider' => 'use Spryker\Shared\Application\ServiceProvider\DoubleSubmitProtectionServiceProvider',
     'use Spryker\Shared\Collector\Code\KeyBuilder\\' => 'use Spryker\Shared\KeyBuilder\KeyBuilder\\',
-    'se Spryker\Zed\Application\Communication\Plugin\ServiceProvider\TwigServiceProvider as SprykerTwigServiceProvider;' => 'use Spryker\Zed\Twig\Communication\Plugin\ServiceProvider\TwigServiceProvider as SprykerTwigServiceProvider;',
+    'use Spryker\Zed\Application\Communication\Plugin\ServiceProvider\TwigServiceProvider as SprykerTwigServiceProvider;' => 'use Spryker\Zed\Twig\Communication\Plugin\ServiceProvider\TwigServiceProvider as SprykerTwigServiceProvider;',
     '@var \Spryker\Shared\Collector\Code\KeyBuilder\KeyBuilderInterface' => '@var \Spryker\Shared\KeyBuilder\KeyBuilderInterface',
     '@param \Spryker\Shared\Collector\Code\KeyBuilder\KeyBuilderInterface' => '@param \Spryker\Shared\KeyBuilder\KeyBuilderInterface',
     '@var \Spryker\Shared\Library\Storage\Adapter\KeyValue\ReadInterface' => '@var \Spryker\Zed\Collector\Business\Storage\Adapter\KeyValue\ReadInterface',
@@ -161,26 +160,33 @@ $searchAndReplace = new SearchAndReplace([
     'DataDirectory::getLocalStoreSpecificPath(\'cache/Yves/twig\')' => 'APPLICATION_ROOT_DIR . \'/data/\' . Store::getInstance()->getStoreName() . \'/cache/Yves/twig\'',
     'DataDirectory::getLocalStoreSpecificPath(\'cache/profiler\')' => 'APPLICATION_ROOT_DIR . \'/data/\' . Store::getInstance()->getStoreName() . \'/cache/profiler\'',
     '@return \Spryker\Shared\Library\DateFormatter' => '@return \Spryker\Service\UtilDateTime\UtilDateTimeServiceInterface',
-    'use Spryker\Shared\Library\System;' => '',
-    'use Spryker\Shared\Library\Context;' => '',
-    'use Spryker\Shared\Library\DateFormatter;' => '',
-    '$config[ApplicationConstants::ALLOW_INTEGRATION_CHECKS] = true;' => '',
-    '$config[ApplicationConstants::ALLOW_INTEGRATION_CHECKS] = false;' => '',
-    '$config[ApplicationConstants::TRANSFER_SSL] = false;' => '',
-    '$config[ApplicationConstants::TRANSFER_SSL] = true;' => '',
     'use Spryker\Shared\Library\Application\Environment as ApplicationEnvironment;' => 'use Spryker\Shared\Config\Application\Environment as ApplicationEnvironment;',
     '$config[ErrorHandlerConstants::ERROR_RENDERER] = true;' => '$config[ErrorHandlerConstants::ERROR_RENDERER] = WebHtmlErrorRenderer::class;',
     '$config[ErrorHandlerConstants::ERROR_RENDERER] = false;' => '$config[ErrorHandlerConstants::ERROR_RENDERER] = WebExceptionErrorRenderer::class;',
     'use Spryker\Zed\Kernel\Communication\Plugin\GatewayControllerListenerPlugin;' => 'use Spryker\Zed\ZedRequest\Communication\Plugin\GatewayControllerListenerPlugin;',
     'use Spryker\Zed\Kernel\Communication\Plugin\GatewayServiceProviderPlugin;' => 'use Spryker\Zed\ZedRequest\Communication\Plugin\GatewayServiceProviderPlugin;',
     'use Spryker\Zed\Application\Communication\Console\BuildNavigationConsole;' => 'use Spryker\Zed\Navigation\Communication\Console\BuildNavigationConsole;',
-    '$this->application->register(new MonologServiceProvider());' => '',
     'namespace Pyz\Zed\Application\Communication;' => 'namespace Pyz\Zed\Application\Communication;' .  PHP_EOL .  PHP_EOL . 'use Spryker\Shared\Auth\AuthConstants;' . PHP_EOL . 'use Spryker\Shared\Config\Config;',
     'define(\'APPLICATION\', \'YVES\');' => 'use Spryker\Shared\ErrorHandler\ErrorHandlerEnvironment;' . PHP_EOL . PHP_EOL . 'define(\'APPLICATION\', \'YVES\');',
     'define(\'APPLICATION\', \'ZED\');' => 'use Spryker\Shared\ErrorHandler\ErrorHandlerEnvironment;' . PHP_EOL . PHP_EOL . 'define(\'APPLICATION\', \'ZED\');',
     '$bootstrap = new YvesBootstrap();' => '$errorHandlerEnvironment = new ErrorHandlerEnvironment();' . PHP_EOL . '$errorHandlerEnvironment->initialize();' . PHP_EOL . PHP_EOL . '$bootstrap = new YvesBootstrap();',
     '$bootstrap = new ZedBootstrap();' => '$errorHandlerEnvironment = new ErrorHandlerEnvironment();' . PHP_EOL . '$errorHandlerEnvironment->initialize();' . PHP_EOL . PHP_EOL . '$bootstrap = new ZedBootstrap();',
     'return new DateFormatterTwigExtension($this->createDateFormatter());' => 'return new DateTimeFormatterTwigExtension($this->getUtilDateTimeService());',
+    'class NewRelicDependencyProvider' => 'use Spryker\Yves\Kernel\Container;' . PHP_EOL . PHP_EOL . 'class NewRelicDependencyProvider',
+]);
+
+
+$searchAndRemove = new SearchAndRemove([
+    'new ApplicationIntegrationCheckConsole\(\),',
+    'use Spryker\Shared\Library\System;',
+    'use Spryker\Shared\Library\Context;',
+    'use Spryker\Shared\Library\DateFormatter;',
+    'use Spryker\Shared\Library\DataDirectory;',
+    '$config[ApplicationConstants::ALLOW_INTEGRATION_CHECKS] = true;',
+    '$config[ApplicationConstants::ALLOW_INTEGRATION_CHECKS] = false;',
+    '$config[ApplicationConstants::TRANSFER_SSL] = false;',
+    '$config[ApplicationConstants::TRANSFER_SSL] = true;',
+    '$this->application->register(new MonologServiceProvider());',
 ]);
 
 
@@ -193,12 +199,12 @@ $useFinder = new UseFinder([
     'use Spryker\\\\Zed\\\\Messenger\\\\Business\\\\Model\\\\MessengerInterface' => 'UseStatementReplace was not able to replace this use statement, maybe you use this with an alias',
     'use Pyz\\\\Yves\\\\Product\\\\Plugin\\\\TwigProductImagePlugin',
     'public function getCheckSteps\(' => 'You can remove this method, use proper CI for testing',
-    'new ApplicationIntegrationCheckConsole\(\)' => 'You can remove this code this is no longer used',
+    'System::getHostname()' => 'Please use UtilNetworkService::getHostName() instead',
 ]);
 
 
 $missingCodeFinder = new MissingCodeFinder([
-    'ApplicationDependencyProvider.php' => [
+    'Pyz/Yves/Application/ApplicationDependencyProvider.php' => [
         '$container = $this->addUtilDateTimeService($container);' => '$container = $this->addUtilDateTimeService($container);',
     ],
     'Pyz/Zed/Application/ApplicationDependencyProvider.php' => [
@@ -238,21 +244,18 @@ $container[self::SERVICE_DATA] = function (Container $container) {
 };
         ',
     ],
-
-    'UpdaterDependencyProvider.php' => [
+    'Pyz/Zed/Updater/UpdaterDependencyProvider.php' => [
         '$container[static::SERVICE_UTIL_IO] = function (Container $container) {' => '
 $container[static::SERVICE_UTIL_IO] = function (Container $container) {
     return $container->getLocator()->utilDataReader()->service();
 };
         ',
     ],
-    'ProductStockUpdater.php.php' => [
-        'protected $utilDataReaderService;' => '
-/**
- * @var \Spryker\Service\UtilDataReader\UtilDataReaderService
- */
-protected $utilDataReaderService;
-        ',
+    'ProductStockUpdater.php' => [
+        'protected $utilDataReaderService;' => '    /**
+     * @var \Spryker\Service\UtilDataReader\UtilDataReaderService
+     */
+    protected $utilDataReaderService;',
     ],
     'ImporterDependencyProvider.php' => [
         '$container[static::SERVICE_DATA] = function (Container $container) {' => '
@@ -260,14 +263,6 @@ $container[static::SERVICE_DATA] = function (Container $container) {
     return $container->getLocator()->utilDataReader()->service();
 };
         ',
-    ],
-    'public/Yves/index.php' => [
-        'new ErrorHandlerEnvironment()' => '$errorHandlerEnvironment = new ErrorHandlerEnvironment();
-$errorHandlerEnvironment->initialize();'
-    ],
-    'public/Zed/index.php' => [
-        'new ErrorHandlerEnvironment()' => '$errorHandlerEnvironment = new ErrorHandlerEnvironment();
-$errorHandlerEnvironment->initialize();'
     ],
 ]);
 
@@ -428,6 +423,7 @@ $removeFile = new RemoveFile([
 $updaterCommand->addUpdater($constantReplace);
 $updaterCommand->addUpdater($constantRemoved);
 $updaterCommand->addUpdater($searchAndReplace);
+$updaterCommand->addUpdater($searchAndRemove);
 $updaterCommand->addUpdater($useFinder);
 $updaterCommand->addUpdater($missingCodeFinder);
 
