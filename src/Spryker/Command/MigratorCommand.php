@@ -13,25 +13,28 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
-use Symfony\Component\Yaml\Yaml;
 
 class MigratorCommand extends Command
 {
+
     const OPTION_DRY = 'dry';
     const OPTION_DRY_SHORT = 'd';
 
+    const OPTION_CORE = 'core';
+    const OPTION_CORE_SHORT = 'c';
+
     /**
-     * @var InputInterface
+     * @var \Symfony\Component\Console\Input\InputInterface
      */
     protected $input;
 
     /**
-     * @var OutputInterface
+     * @var \Symfony\Component\Console\Output\OutputInterface
      */
     protected $output;
 
     /**
-     * @var AbstractMigrator[]
+     * @var \Spryker\AbstractMigrator[]
      */
     protected $updater = [];
 
@@ -44,7 +47,7 @@ class MigratorCommand extends Command
             ->setName('spryker:migrate')
             ->setDescription('Migrates code to the latest changes made by Spryker.')
             ->addOption(static::OPTION_DRY, static::OPTION_DRY_SHORT, null, 'Use this option to see what will be changed.')
-        ;
+            ->addOption(static::OPTION_CORE, static::OPTION_CORE_SHORT, null, 'Use this option to check core code.');
     }
 
     /**
@@ -58,7 +61,7 @@ class MigratorCommand extends Command
         $this->input = $input;
         $this->output = $output;
 
-        $finder = $this->getFinder();
+        $finder = $this->getFinder($output);
 
         $output->writeln(sprintf('Start checking <fg=green>%d</> files...', $finder->count()));
 
@@ -75,35 +78,54 @@ class MigratorCommand extends Command
      */
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
+        $path = __DIR__ . '/../../../config/';
+        if ($input->hasOption(static::OPTION_CORE) && $input->getOption(static::OPTION_CORE)) {
+            $path .= 'core/';
+            $output->writeln('Configure for core migration');
+        } else {
+            $path .= 'project/';
+            $output->writeln('Configure for project migration');
+        }
+
         $finder = new Finder();
-        $finder->in(__DIR__ . '/../../../config/project');
+        $finder->in($path);
 
         foreach ($finder as $fileInfo) {
-            $ymlConfig = Yaml::parse($fileInfo->getContents());
-            $className = array_keys($ymlConfig)[0];
-            $configuration = array_values($ymlConfig)[0];
+            $className = str_replace('.php', '', $fileInfo->getFilename());
+            $className = 'Spryker\\Migrator\\' . $className;
+            $configuration = require_once $fileInfo->getPathname();
 
             $migratorClass = new $className($configuration);
             $this->addMigrator($migratorClass);
         }
     }
 
-
     /**
+     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     *
      * @return \Symfony\Component\Finder\Finder
      */
-    protected function getFinder()
+    protected function getFinder(OutputInterface $output)
     {
+        if ($this->input->hasOption(static::OPTION_CORE) && $this->input->getOption(static::OPTION_CORE)) {
+            $directories = [
+                PROJECT_ROOT . '/vendor/spryker/spryker/Bundles',
+            ];
+
+            $output->writeln('Loading files from core');
+        } else {
+            $directories = [
+                PROJECT_ROOT . '/public',
+                PROJECT_ROOT . '/src',
+                PROJECT_ROOT . '/config',
+                PROJECT_ROOT . '/tests',
+            ];
+
+            $output->writeln('Loading files from project');
+        }
+
         $finder = new Finder();
-        $finder->files()->in([
-            PROJECT_ROOT . '/public',
-            PROJECT_ROOT . '/src',
-            PROJECT_ROOT . '/config',
-            PROJECT_ROOT . '/tests',
-        ]);
-//        $finder->files()->in([
-//            PROJECT_ROOT . '/vendor/spryker/spryker/Bundles',
-//        ]);
+        $finder->files()->in($directories);
 
         return $finder;
     }
@@ -153,8 +175,8 @@ class MigratorCommand extends Command
         if ($fileInfo->getContents() !== $content) {
             if (!$this->isDryRun()) {
                 file_put_contents($fileInfo->getPathname(), $content);
+                $this->output->writeln('<bg=yellow;fg=black>Saved new content to:</> <fg=green>' . $fileInfo->getPathname() . '</>');
             }
-            $this->output->writeln('<bg=yellow;fg=black>Saved new content to:</> <fg=green>' . $fileInfo->getPathname() . '</>');
             $this->output->writeln('');
 
         }
@@ -167,6 +189,5 @@ class MigratorCommand extends Command
     {
         return ($this->input->hasOption(static::OPTION_DRY) && $this->input->getOption(static::OPTION_DRY));
     }
-
 
 }
