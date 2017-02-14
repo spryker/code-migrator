@@ -5,9 +5,9 @@
  * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
  */
 
-namespace Unit\Spryker\Updater;
+namespace Unit\Spryker\Migrator;
 
-use Spryker\Updater\UseFinder;
+use Spryker\Migrator\UseFinder;
 
 /**
  * @group Unit
@@ -70,7 +70,7 @@ class UseFinderTest extends AbstractTest
     /**
      * @param array $configuration
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject|\Spryker\Updater\UseFinder
+     * @return \PHPUnit_Framework_MockObject_MockObject|\Spryker\Migrator\UseFinder
      */
     protected function getUpdaterMock(array $configuration)
     {

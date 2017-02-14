@@ -13,7 +13,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Finder\SplFileInfo;
 
-abstract class AbstractUpdater implements UpdaterInterface
+abstract class AbstractMigrator
 {
 
     const MESSAGE_TEMPLATE_FILE_NAME = '<fg=yellow>%s</>';
@@ -47,6 +47,16 @@ abstract class AbstractUpdater implements UpdaterInterface
         $this->output = $output;
         $this->command = $command;
     }
+
+    /**
+     * Return false if you don't want the file to be saved
+     *
+     * @param \Symfony\Component\Finder\SplFileInfo $fileInfo
+     * @param string $content
+     *
+     * @return string|bool
+     */
+    abstract public function execute(SplFileInfo $fileInfo, $content);
 
     /**
      * @param string $message

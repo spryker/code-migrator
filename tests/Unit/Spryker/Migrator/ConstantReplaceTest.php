@@ -5,9 +5,9 @@
  * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
  */
 
-namespace Unit\Spryker\Updater;
+namespace Unit\Spryker\Migrator;
 
-use Spryker\Updater\ConstantReplace;
+use Spryker\Migrator\ConstantReplace;
 
 /**
  * @group Unit
@@ -95,7 +95,7 @@ class ConstantReplaceTest extends AbstractTest
     }
 
     /**
-     * @return \PHPUnit_Framework_MockObject_MockObject|\Spryker\Updater\ConstantReplace
+     * @return \PHPUnit_Framework_MockObject_MockObject|\Spryker\Migrator\ConstantReplace
      */
     protected function getUpdater()
     {

@@ -5,22 +5,20 @@
  * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
  */
 
-namespace Spryker\Updater;
+namespace Spryker\Migrator;
 
-use Spryker\AbstractUpdater;
+use Spryker\AbstractMigrator;
 use Symfony\Component\Finder\SplFileInfo;
 
 /**
  * Specification:
- * - Replaces exact use statements (use Foo\Bar;), this should be used when you know there can't be an alias.
- * - Replaces use statement starting with (use Foo\Bar{\Anything\Else}), this should be used when you need to replace multiple occurrences.
+ * - Removes the found string.
  *
- * Configuration can be like this:
  */
-class SearchAndReplace extends AbstractUpdater
+class SearchAndRemove extends AbstractMigrator
 {
 
-    const MESSAGE_TEMPLATE_REPLACED = 'Replaced "<fg=green>%s</>" with "<fg=green>%s</>"';
+    const MESSAGE_TEMPLATE_REMOVED = 'Removed "<fg=green>%s</>"';
 
     /**
      * @var array
@@ -43,15 +41,11 @@ class SearchAndReplace extends AbstractUpdater
      */
     public function execute(SplFileInfo $fileInfo, $content)
     {
-        foreach ($this->configuration as $search => $replace) {
+        foreach ($this->configuration as $search) {
             if (preg_match('/' . preg_quote($search, '/') . '/', $content)) {
 
-                if (preg_match('/' . preg_quote($replace, '/') . '/', $content)) {
-                    continue;
-                }
-
-                $content = str_replace($search, $replace, $content);
-                $message = sprintf(static::MESSAGE_TEMPLATE_REPLACED, rtrim($search, '\\'), rtrim($replace, '\\'));
+                $content = str_replace($search, '', $content);
+                $message = sprintf(static::MESSAGE_TEMPLATE_REMOVED, rtrim($search, '\\'));
                 $this->outputMessage($message);
             }
         }

@@ -5,10 +5,10 @@
  * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
  */
 
-namespace Unit\Spryker\Updater;
+namespace Unit\Spryker\Migrator;
 
-use Spryker\Updater\ClassConstantAdder;
-use Spryker\Updater\ClassMethodAdder;
+use Spryker\Migrator\ClassConstantAdder;
+use Spryker\Migrator\ClassMethodAdder;
 
 /**
  * @group Unit

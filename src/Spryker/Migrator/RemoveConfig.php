@@ -5,9 +5,9 @@
  * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
  */
 
-namespace Spryker\Updater;
+namespace Spryker\Migrator;
 
-use Spryker\AbstractUpdater;
+use Spryker\AbstractMigrator;
 use Symfony\Component\Finder\SplFileInfo;
 
 /**
@@ -21,7 +21,7 @@ use Symfony\Component\Finder\SplFileInfo;
  * ];
  * ```
  */
-class RemoveConfig extends AbstractUpdater
+class RemoveConfig extends AbstractMigrator
 {
 
     /**

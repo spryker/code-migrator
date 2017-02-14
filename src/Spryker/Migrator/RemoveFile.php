@@ -5,9 +5,9 @@
  * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
  */
 
-namespace Spryker\Updater;
+namespace Spryker\Migrator;
 
-use Spryker\AbstractUpdater;
+use Spryker\AbstractMigrator;
 use Symfony\Component\Finder\SplFileInfo;
 
 /**
@@ -21,7 +21,7 @@ use Symfony\Component\Finder\SplFileInfo;
  * ]
  * ```
  */
-class RemoveFile extends AbstractUpdater
+class RemoveFile extends AbstractMigrator
 {
     const MESSAGE_TEMPLATE_REMOVED_FILE = 'Removed "<fg=green>%s</>"';
 

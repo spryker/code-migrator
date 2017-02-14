@@ -5,9 +5,9 @@
  * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
  */
 
-namespace Spryker\Updater;
+namespace Spryker\Migrator;
 
-use Spryker\AbstractUpdater;
+use Spryker\AbstractMigrator;
 use Symfony\Component\Finder\SplFileInfo;
 
 /**
@@ -34,7 +34,7 @@ use Symfony\Component\Finder\SplFileInfo;
  * ];
  * ```
  */
-class MissingCodeFinder extends AbstractUpdater
+class MissingCodeFinder extends AbstractMigrator
 {
 
     const MESSAGE_TEMPLATE_MISSING_CODE_BLOCK_FOUND = 'Missing code block found, searched for "<fg=green>%s</>", you need to add the following code block manually';

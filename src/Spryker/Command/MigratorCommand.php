@@ -7,14 +7,14 @@
 
 namespace Spryker\Command;
 
-use Spryker\AbstractUpdater;
+use Spryker\AbstractMigrator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
-class UpdaterCommand extends Command
+class MigratorCommand extends Command
 {
     const OPTION_DRY = 'dry';
     const OPTION_DRY_SHORT = 'd';
@@ -30,7 +30,7 @@ class UpdaterCommand extends Command
     protected $output;
 
     /**
-     * @var AbstractUpdater[]
+     * @var AbstractMigrator[]
      */
     protected $updater = [];
 
@@ -40,8 +40,8 @@ class UpdaterCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('spryker:update')
-            ->setDescription('Updates to the latest changes made by Spryker.')
+            ->setName('spryker:migrate')
+            ->setDescription('Migrates code to the latest changes made by Spryker.')
             ->addOption(static::OPTION_DRY, static::OPTION_DRY_SHORT, null, 'Use this option to see what will be changed.')
         ;
     }
@@ -86,11 +86,11 @@ class UpdaterCommand extends Command
     }
 
     /**
-     * @param \Spryker\AbstractUpdater $updater
+     * @param \Spryker\AbstractMigrator $updater
      *
      * @return $this
      */
-    public function addUpdater(AbstractUpdater $updater)
+    public function addUpdater(AbstractMigrator $updater)
     {
         $this->updater[] = $updater;
 

@@ -5,12 +5,12 @@
  * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
  */
 
-namespace Spryker\Updater;
+namespace Spryker\Migrator;
 
-use Spryker\AbstractUpdater;
+use Spryker\AbstractMigrator;
 use Symfony\Component\Finder\SplFileInfo;
 
-class ClassMethodAdder extends AbstractUpdater
+class ClassConstantAdder extends AbstractMigrator
 {
 
     /**
@@ -34,12 +34,9 @@ class ClassMethodAdder extends AbstractUpdater
      */
     public function execute(SplFileInfo $fileInfo, $content)
     {
-        foreach ($this->configuration as $fileNamePattern => $methods) {
-            if (strpos($fileInfo->getPathname(), $fileNamePattern) === false) {
-                continue;
-            }
-            foreach ($methods as $search => $method) {
-                $content = $this->addMethodToFile($search, $method, $content);
+        foreach ($this->configuration as $fileNamePattern => $constants) {
+            foreach ($constants as $constant) {
+                $content = $this->addConstantToFile($constant, $content);
             }
         }
 
@@ -53,7 +50,7 @@ class ClassMethodAdder extends AbstractUpdater
      */
     public function accept(SplFileInfo $fileInfo)
     {
-        foreach ($this->configuration as $fileNamePattern => $methods) {
+        foreach ($this->configuration as $fileNamePattern => $constants) {
             if (strpos($fileInfo->getPathname(), $fileNamePattern) !== false) {
                 return true;
             }
@@ -63,21 +60,20 @@ class ClassMethodAdder extends AbstractUpdater
     }
 
     /**
-     * @param string $search
-     * @param string $method
+     * @param string $constant
      * @param string $content
      *
      * @return string
      */
-    protected function addMethodToFile($search, $method, $content)
+    protected function addConstantToFile($constant, $content)
     {
-        if (preg_match('/' . preg_quote($search, '/') . '/', $content)) {
+        if (preg_match('/' . preg_quote($constant, '/') . '/', $content)) {
             return $content;
         }
 
-        $stringToAdd = $method . PHP_EOL . PHP_EOL . '}';
+        $stringToAdd = '{' . PHP_EOL . PHP_EOL . '    ' . $constant;
 
-        $content = preg_replace('/^\}/m', $stringToAdd, $content);
+        $content = preg_replace('/^\{/m', $stringToAdd, $content);
 
         return $content;
     }

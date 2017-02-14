@@ -5,9 +5,9 @@
  * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
  */
 
-namespace Spryker\Updater;
+namespace Spryker\Migrator;
 
-use Spryker\AbstractUpdater;
+use Spryker\AbstractMigrator;
 use Symfony\Component\Finder\SplFileInfo;
 
 /**
@@ -23,7 +23,7 @@ use Symfony\Component\Finder\SplFileInfo;
  * ];
  * ```
  */
-class ConstantRemoved extends AbstractUpdater
+class ConstantRemoved extends AbstractMigrator
 {
 
     const MESSAGE_PATTERN = 'Constant "<fg=green>%s</>" is removed from core but was found';

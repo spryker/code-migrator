@@ -5,9 +5,9 @@
  * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
  */
 
-namespace Unit\Spryker\Updater;
+namespace Unit\Spryker\Migrator;
 
-use Spryker\Updater\ConstantRemoved;
+use Spryker\Migrator\ConstantRemoved;
 
 /**
  * @group Unit
@@ -72,7 +72,7 @@ class ConstantRemovedTest extends AbstractTest
     /**
      * @param array $configuration
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject|\Spryker\Updater\ConstantRemoved
+     * @return \PHPUnit_Framework_MockObject_MockObject|\Spryker\Migrator\ConstantRemoved
      */
     protected function getUpdaterMock(array $configuration)
     {

@@ -5,9 +5,9 @@
  * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
  */
 
-namespace Unit\Spryker\Updater;
+namespace Unit\Spryker\Migrator;
 
-use Spryker\Updater\SearchAndReplace;
+use Spryker\Migrator\SearchAndReplace;
 
 /**
  * @group Unit
@@ -123,7 +123,7 @@ class SearchAndReplaceTest extends AbstractTest
     /**
      * @param array $configuration
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject|\Spryker\Updater\SearchAndReplace
+     * @return \PHPUnit_Framework_MockObject_MockObject|\Spryker\Migrator\SearchAndReplace
      */
     protected function getUpdaterMock(array $configuration)
     {

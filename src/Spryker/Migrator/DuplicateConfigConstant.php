@@ -5,9 +5,9 @@
  * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
  */
 
-namespace Spryker\Updater;
+namespace Spryker\Migrator;
 
-use Spryker\AbstractUpdater;
+use Spryker\AbstractMigrator;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Finder\SplFileInfo;
 
@@ -25,7 +25,7 @@ use Symfony\Component\Finder\SplFileInfo;
  * ];
  * ```
  */
-class DuplicateConfigConstant extends AbstractUpdater
+class DuplicateConfigConstant extends AbstractMigrator
 {
 
     const MESSAGE_TEMPLATE_ADDED_USE = 'Added new use statement "<fg=green>use %s;</>" after "<fg=green>use %s;</>"';

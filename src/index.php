@@ -6,20 +6,20 @@ define('PROJECT_NAMESPACE', 'Pyz');
 require_once PROJECT_ROOT . '/vendor/autoload.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use Spryker\Updater\ClassConstantAdder;
-use Spryker\Updater\ClassMethodAdder;
-use Spryker\Updater\ConstantRemoved;
-use Spryker\Updater\DuplicateConfigConstant;
-use Spryker\Updater\MissingCodeFinder;
-use Spryker\Updater\RemoveFile;
-use Spryker\Updater\SearchAndRemove;
-use Spryker\Updater\UseFinder;
-use Spryker\Updater\SearchAndReplace;
+use Spryker\Migrator\ClassConstantAdder;
+use Spryker\Migrator\ClassMethodAdder;
+use Spryker\Migrator\ConstantRemoved;
+use Spryker\Migrator\DuplicateConfigConstant;
+use Spryker\Migrator\MissingCodeFinder;
+use Spryker\Migrator\RemoveFile;
+use Spryker\Migrator\SearchAndRemove;
+use Spryker\Migrator\UseFinder;
+use Spryker\Migrator\SearchAndReplace;
 use Symfony\Component\Console\Application;
-use Spryker\Updater\ConstantReplace;
-use Spryker\Command\UpdaterCommand;
+use Spryker\Migrator\ConstantReplace;
+use Spryker\Command\MigratorCommand;
 
-$updaterCommand = new UpdaterCommand();
+$updaterCommand = new MigratorCommand();
 
 /**
  * Constants to replace

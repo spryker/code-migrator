@@ -5,9 +5,9 @@
  * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
  */
 
-namespace Spryker\Updater;
+namespace Spryker\Migrator;
 
-use Spryker\AbstractUpdater;
+use Spryker\AbstractMigrator;
 use Symfony\Component\Finder\SplFileInfo;
 
 /**
@@ -24,7 +24,7 @@ use Symfony\Component\Finder\SplFileInfo;
  * ];
  * ```
  */
-class ConstantReplace extends AbstractUpdater
+class ConstantReplace extends AbstractMigrator
 {
 
     const MESSAGE_TEMPLATE_REPLACED_CONSTANT = 'Replaced "<fg=green>%s</>" with "<fg=green>%s</>"';

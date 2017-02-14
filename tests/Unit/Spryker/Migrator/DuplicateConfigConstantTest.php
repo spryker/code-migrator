@@ -5,8 +5,8 @@
  * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
  */
 
-namespace Unit\Spryker\Updater;
-use Spryker\Updater\DuplicateConfigConstant;
+namespace Unit\Spryker\Migrator;
+use Spryker\Migrator\DuplicateConfigConstant;
 
 /**
  * @group Unit

@@ -5,9 +5,9 @@
  * Use of this software requires acceptance of the Evaluation License Agreement. See LICENSE file.
  */
 
-namespace Spryker\Updater;
+namespace Spryker\Migrator;
 
-use Spryker\AbstractUpdater;
+use Spryker\AbstractMigrator;
 use Symfony\Component\Finder\SplFileInfo;
 
 /**
@@ -23,7 +23,7 @@ use Symfony\Component\Finder\SplFileInfo;
  * ];
  * ```
  */
-class UseFinder extends AbstractUpdater
+class UseFinder extends AbstractMigrator
 {
 
     const MESSAGE_TEMPLATE_FOUND_USE = 'Found use of "<fg=green>%s</>"';
