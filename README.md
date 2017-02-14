@@ -3,7 +3,7 @@
 ## Installation
 
 ```
-composer require spryker/code-updater
+composer require spryker/code-migrator
 ```
 
 ## Documentation

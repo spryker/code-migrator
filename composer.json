@@ -1,5 +1,5 @@
 {
-  "name": "spryker/code-updater",
+  "name": "spryker/code-migrator",
   "require": {
     "symfony/console": "^3.0.0",
     "symfony/filesystem": "^3.2",
