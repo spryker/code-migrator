@@ -21,7 +21,15 @@ use Symfony\Component\Finder\SplFileInfo;
  * ```
  * $configuration = [
  *      'fileName' => [
- *          'SearchPattern' => 'Code block',
+ *          [
+ *              'search' => 'search pattern',
+ *              'code' => 'Code block',
+ *          ],
+ *          [
+ *              'search' => 'search pattern',
+ *              'code' => 'Code block',
+ *              'message' => 'Additional message',
+ *          ],
  *      ],
  * ];
  * ```
@@ -31,6 +39,10 @@ class MissingCodeFinder extends AbstractUpdater
 
     const MESSAGE_TEMPLATE_MISSING_CODE_BLOCK_FOUND = 'Missing code block found, searched for "<fg=green>%s</>", you need to add the following code block manually';
     const MESSAGE_TEMPLATE_CODE_BLOCK = '<fg=yellow>[<fg=red>CODE</>]</>' . PHP_EOL . '%s' . PHP_EOL . '<fg=yellow>[<fg=red>/CODE</>]</>';
+
+    const OPTION_SEARCH = 'search';
+    const OPTION_CODE = 'code';
+    const OPTION_MESSAGE = 'message';
 
     /**
      * @var array
@@ -53,11 +65,12 @@ class MissingCodeFinder extends AbstractUpdater
      */
     public function execute(SplFileInfo $fileInfo, $content)
     {
-        foreach ($this->configuration as $filePathPattern => $options) {
+        foreach ($this->configuration as $filePathPattern => $optionsCollection) {
             if (preg_match('/' . preg_quote($filePathPattern, '/') . '/', $fileInfo->getPathname())) {
-                foreach ($options as $search => $codeBlock) {
+                foreach ($optionsCollection as $options) {
+                    $search = $options[self::OPTION_SEARCH];
                     if (!preg_match('/' . preg_quote($search, '/') . '/', $content)) {
-                        $this->outputMessages($filePathPattern, $search, $fileInfo);
+                        $this->outputMessages($options, $fileInfo);
                     }
                 }
             }
@@ -67,22 +80,26 @@ class MissingCodeFinder extends AbstractUpdater
     }
 
     /**
-     * @param string $configKey
-     * @param string $search
+     * @param array $options
      * @param \Symfony\Component\Finder\SplFileInfo $fileInfo
      *
      * @return void
      */
-    protected function outputMessages($configKey, $search, SplFileInfo $fileInfo)
+    protected function outputMessages(array $options, SplFileInfo $fileInfo)
     {
+        $search = $options[static::OPTION_SEARCH];
         $message = sprintf(static::MESSAGE_TEMPLATE_MISSING_CODE_BLOCK_FOUND, $search);
         $this->outputMessage($message);
 
-        $codeBlock = $this->configuration[$configKey][$search];
-        $this->outputMessage(sprintf(static::MESSAGE_TEMPLATE_CODE_BLOCK, $codeBlock));
+        $code = $options[static::OPTION_CODE];
+        $this->outputMessage(sprintf(static::MESSAGE_TEMPLATE_CODE_BLOCK, $code));
 
         $message = sprintf(static::MESSAGE_TEMPLATE_FILE_NAME, $fileInfo->getPathname());
         $this->outputMessage($message);
+
+        if (isset($options[static::OPTION_MESSAGE])) {
+            $this->outputMessage($options[static::OPTION_MESSAGE]);
+        }
 
         $this->outputMessage(static::MESSAGE_MANUALLY);
     }

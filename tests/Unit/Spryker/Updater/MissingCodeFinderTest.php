@@ -29,6 +29,8 @@ public function foo()
 }    
     ';
 
+    const MESSAGE = 'Additional message';
+
     /**
      * @return void
      */
@@ -37,7 +39,10 @@ public function foo()
         $testFile = $this->getTestFile(self::TEST_FILE_MISSING_CODE_BLOCK);
         $configuration = [
             'not_matching_file_name.php' => [
-                static::SEARCH_PATTERN => '',
+                [
+                    MissingCodeFinder::OPTION_SEARCH => static::SEARCH_PATTERN,
+                    MissingCodeFinder::OPTION_CODE => '',
+                ],
             ],
         ];
         $updaterMock = $this->getUpdaterMock($configuration);
@@ -53,7 +58,10 @@ public function foo()
         $testFile = $this->getTestFile(self::TEST_FILE_MISSING_CODE_BLOCK);
         $configuration = [
             $testFile->getFilename() => [
-                static::SEARCH_PATTERN => static::CODE_BLOCK,
+                [
+                    MissingCodeFinder::OPTION_SEARCH => static::SEARCH_PATTERN,
+                    MissingCodeFinder::OPTION_CODE => static::CODE_BLOCK,
+                ],
             ],
         ];
         $expectedMessage = sprintf(MissingCodeFinder::MESSAGE_TEMPLATE_MISSING_CODE_BLOCK_FOUND, static::SEARCH_PATTERN);
@@ -62,6 +70,27 @@ public function foo()
 
         $expectedMessage = sprintf(MissingCodeFinder::MESSAGE_TEMPLATE_CODE_BLOCK, static::CODE_BLOCK);
         $updaterMock->expects($this->at(1))->method('outputMessage')->with($this->equalTo($expectedMessage));
+        $updaterMock->execute($testFile, $testFile->getContents());
+    }
+
+    /**
+     * @return void
+     */
+    public function testWhenConfigurationHasMessageMessageIsPrintedToTheUser()
+    {
+        $testFile = $this->getTestFile(self::TEST_FILE_MISSING_CODE_BLOCK);
+        $configuration = [
+            $testFile->getFilename() => [
+                [
+                    MissingCodeFinder::OPTION_SEARCH => static::SEARCH_PATTERN,
+                    MissingCodeFinder::OPTION_CODE => static::CODE_BLOCK,
+                    MissingCodeFinder::OPTION_MESSAGE => static::MESSAGE,
+                ],
+            ],
+        ];
+        $updaterMock = $this->getUpdaterMock($configuration);
+        $expectedMessage = static::MESSAGE;
+        $updaterMock->expects($this->at(3))->method('outputMessage')->with($this->equalTo($expectedMessage));
         $updaterMock->execute($testFile, $testFile->getContents());
     }
 

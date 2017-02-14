@@ -84,6 +84,8 @@ $searchAndReplace = new SearchAndReplace([
     '@return \Spryker\Zed\Messenger\Business\Model\MessengerInterface' => '@return \Psr\Log\LoggerInterface',
     'use Spryker\Shared\Library\BatchIterator\CountableIteratorInterface;' => 'use Spryker\Service\UtilDataReader\Model\BatchIterator\CountableIteratorInterface;',
     '@param \Spryker\Shared\Library\BatchIterator\CountableIteratorInterface' => '@param \Spryker\Service\UtilDataReader\Model\BatchIterator\CountableIteratorInterface',
+    '@return \Spryker\Shared\Library\BatchIterator\CountableIteratorInterface' => '@return \Spryker\Service\UtilDataReader\Model\BatchIterator\CountableIteratorInterface',
+    '@var \Spryker\Shared\Library\BatchIterator\CountableIteratorInterface' => '@var \Spryker\Service\UtilDataReader\Model\BatchIterator\CountableIteratorInterface',
     'use Spryker\Shared\Library\Collection\CollectionInterface;' => 'use Everon\Component\Collection\CollectionInterface;',
     '@var \Spryker\Shared\Library\Collection\CollectionInterface' => '@var \Everon\Component\Collection\CollectionInterface',
     '@param \Spryker\Shared\Library\Collection\CollectionInterface' => '@param \Everon\Component\Collection\CollectionInterface',
@@ -177,7 +179,8 @@ $searchAndReplace = new SearchAndReplace([
 
 
 $searchAndRemove = new SearchAndRemove([
-    'new ApplicationIntegrationCheckConsole\(\),',
+    'new ApplicationIntegrationCheckConsole(),',
+    'use Spryker\Zed\Application\Communication\Console\ApplicationIntegrationCheckConsole;',
     'use Spryker\Shared\Library\System;',
     'use Spryker\Shared\Library\Context;',
     'use Spryker\Shared\Library\DateFormatter;',
@@ -205,64 +208,124 @@ $useFinder = new UseFinder([
 
 $missingCodeFinder = new MissingCodeFinder([
     'Pyz/Yves/Application/ApplicationDependencyProvider.php' => [
-        '$container = $this->addUtilDateTimeService($container);' => '$container = $this->addUtilDateTimeService($container);',
+        [
+            MissingCodeFinder::OPTION_SEARCH => '$container = $this->addUtilDateTimeService($container);',
+            MissingCodeFinder::OPTION_CODE => '$container = $this->addUtilDateTimeService($container);',
+        ],
     ],
     'Pyz/Zed/Application/ApplicationDependencyProvider.php' => [
-        'new RedirectAfterLoginProvider()' => 'new RedirectAfterLoginProvider()',
-        'new GuiTwigExtensionServiceProvider()' => 'new GuiTwigExtensionServiceProvider()',
-        'new DateTimeFormatterServiceProvider()' => 'new DateTimeFormatterServiceProvider()',
-        'new TranslationServiceProvider()' => 'new TranslationServiceProvider()',
-        'new NewRelicRequestTransactionServiceProvider()' => 'new NewRelicRequestTransactionServiceProvider()',
-        'new NavigationServiceProvider()' => 'new NavigationServiceProvider()',
-        'new PropelServiceProvider()' => 'new PropelServiceProvider()',
+        [
+            MissingCodeFinder::OPTION_SEARCH => 'new RedirectAfterLoginProvider()',
+            MissingCodeFinder::OPTION_CODE => 'new RedirectAfterLoginProvider(),',
+            MissingCodeFinder::OPTION_MESSAGE => 'Add this to the "getServiceProvider()" method',
+        ],
+        [
+            MissingCodeFinder::OPTION_SEARCH => 'new GuiTwigExtensionServiceProvider()',
+            MissingCodeFinder::OPTION_CODE => 'new GuiTwigExtensionServiceProvider(),',
+            MissingCodeFinder::OPTION_MESSAGE => 'Add this to the "getServiceProvider()" method',
+        ],
+        [
+            MissingCodeFinder::OPTION_SEARCH => 'new DateTimeFormatterServiceProvider()',
+            MissingCodeFinder::OPTION_CODE => 'new DateTimeFormatterServiceProvider(),',
+            MissingCodeFinder::OPTION_MESSAGE => 'Add this to the "getServiceProvider()" method',
+        ],
+        [
+            MissingCodeFinder::OPTION_SEARCH => 'new TranslationServiceProvider()',
+            MissingCodeFinder::OPTION_CODE => 'new TranslationServiceProvider(),',
+            MissingCodeFinder::OPTION_MESSAGE => 'Add this to the "getServiceProvider()" method',
+        ],
+        [
+            MissingCodeFinder::OPTION_SEARCH => 'new NewRelicRequestTransactionServiceProvider()',
+            MissingCodeFinder::OPTION_CODE => 'new NewRelicRequestTransactionServiceProvider(),',
+            MissingCodeFinder::OPTION_MESSAGE => 'Add this to the "getServiceProvider()" method',
+        ],
+        [
+            MissingCodeFinder::OPTION_SEARCH => 'new NavigationServiceProvider()',
+            MissingCodeFinder::OPTION_CODE => 'new NavigationServiceProvider(),',
+            MissingCodeFinder::OPTION_MESSAGE => 'Add this to the "getServiceProvider()" method',
+        ],
+        [
+            MissingCodeFinder::OPTION_SEARCH => 'new PropelServiceProvider()',
+            MissingCodeFinder::OPTION_CODE => 'new PropelServiceProvider(),',
+            MissingCodeFinder::OPTION_MESSAGE => 'Add this to the "getServiceProvider()" method',
+        ],
     ],
     'Pyz/Zed/Checkout/CheckoutDependencyProvider.php' => [
-        'new OmsPostSaveHookPlugin()' => 'new OmsPostSaveHookPlugin()',
+        [
+            MissingCodeFinder::OPTION_SEARCH => 'new OmsPostSaveHookPlugin()',
+            MissingCodeFinder::OPTION_CODE => 'new OmsPostSaveHookPlugin(),',
+            MissingCodeFinder::OPTION_MESSAGE => 'Add this to the "getCheckoutPostHooks()" method',
+        ],
     ],
     'CategoryNodeCollector.php' => [
-        'parent::__construct($utilDataReaderService);' => 'parent::__construct($utilDataReaderService);',
+        [
+            MissingCodeFinder::OPTION_SEARCH => 'parent::__construct($utilDataReaderService);',
+            MissingCodeFinder::OPTION_CODE => 'parent::__construct($utilDataReaderService);',
+        ],
     ],
     'CmsPageCollector.php' => [
-        'parent::__construct($utilDataReaderService);' => 'parent::__construct($utilDataReaderService);',
+        [
+            MissingCodeFinder::OPTION_SEARCH => 'parent::__construct($utilDataReaderService);',
+            MissingCodeFinder::OPTION_CODE => 'parent::__construct($utilDataReaderService);',
+        ],
     ],
     'ProductCollector.php' => [
-        'parent::__construct($utilDataReaderService);' => 'parent::__construct($utilDataReaderService);',
+        [
+            MissingCodeFinder::OPTION_SEARCH => 'parent::__construct($utilDataReaderService);',
+            MissingCodeFinder::OPTION_CODE => 'parent::__construct($utilDataReaderService);',
+        ],
     ],
     'AttributeMapCollector.php' => [
-        'parent::__construct($utilDataReaderService);' => 'parent::__construct($utilDataReaderService);',
+        [
+            MissingCodeFinder::OPTION_SEARCH => 'parent::__construct($utilDataReaderService);',
+            MissingCodeFinder::OPTION_CODE => 'parent::__construct($utilDataReaderService);',
+        ],
     ],
     'ProductAbstractCollector.php' => [
-        'parent::__construct($utilDataReaderService);' => 'parent::__construct($utilDataReaderService);',
+        [
+            MissingCodeFinder::OPTION_SEARCH => 'parent::__construct($utilDataReaderService);',
+            MissingCodeFinder::OPTION_CODE => 'parent::__construct($utilDataReaderService);',
+        ],
     ],
     'ProductConcreteCollector.php' => [
-        'parent::__construct($utilDataReaderService);' => 'parent::__construct($utilDataReaderService);',
+        [
+            MissingCodeFinder::OPTION_SEARCH => 'parent::__construct($utilDataReaderService);',
+            MissingCodeFinder::OPTION_CODE => 'parent::__construct($utilDataReaderService);',
+        ],
     ],
     'Pyz/Zed/Collector/CollectorDependencyProvider.php' => [
-        '$container[self::SERVICE_DATA] = function (Container $container) {' => '
-$container[self::SERVICE_DATA] = function (Container $container) {
+        [
+            MissingCodeFinder::OPTION_SEARCH => '$container[self::SERVICE_DATA] = function (Container $container) {\' => ',
+            MissingCodeFinder::OPTION_CODE => '$container[self::SERVICE_DATA] = function (Container $container) {
     return $container->getLocator()->utilDataReader()->service();
-};
-        ',
+};',
+        ],
     ],
     'Pyz/Zed/Updater/UpdaterDependencyProvider.php' => [
-        '$container[static::SERVICE_UTIL_IO] = function (Container $container) {' => '
-$container[static::SERVICE_UTIL_IO] = function (Container $container) {
+        [
+            MissingCodeFinder::OPTION_SEARCH => '$container[static::SERVICE_UTIL_IO] = function (Container $container) {\' => ',
+            MissingCodeFinder::OPTION_CODE => '$container[static::SERVICE_UTIL_IO] = function (Container $container) {
     return $container->getLocator()->utilDataReader()->service();
-};
-        ',
+};',
+        ],
     ],
     'ProductStockUpdater.php' => [
-        'protected $utilDataReaderService;' => '    /**
+        [
+            MissingCodeFinder::OPTION_SEARCH => 'protected $utilDataReaderService;',
+            MissingCodeFinder::OPTION_CODE => '    /**
      * @var \Spryker\Service\UtilDataReader\UtilDataReaderService
      */
     protected $utilDataReaderService;',
+        ],
     ],
     'ImporterDependencyProvider.php' => [
-        '$container[static::SERVICE_DATA] = function (Container $container) {' => '
+        [
+            MissingCodeFinder::OPTION_SEARCH => '$container[static::SERVICE_DATA] = function (Container $container) {',
+            MissingCodeFinder::OPTION_CODE => '
 $container[static::SERVICE_DATA] = function (Container $container) {
     return $container->getLocator()->utilDataReader()->service();
-};
-        ',
+};',
+        ],
     ],
 ]);
 
@@ -426,9 +489,7 @@ $updaterCommand->addUpdater($searchAndReplace);
 $updaterCommand->addUpdater($searchAndRemove);
 $updaterCommand->addUpdater($useFinder);
 $updaterCommand->addUpdater($missingCodeFinder);
-
 $updaterCommand->addUpdater($duplicateConstantUpdater);
-
 $updaterCommand->addUpdater($removeFile);
 
 $application = new Application();
