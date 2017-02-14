@@ -45,19 +45,6 @@ class MissingCodeFinder extends AbstractMigrator
     const OPTION_MESSAGE = 'message';
 
     /**
-     * @var array
-     */
-    protected $configuration;
-
-    /**
-     * @param array $configuration
-     */
-    public function __construct(array $configuration)
-    {
-        $this->configuration = $configuration;
-    }
-
-    /**
      * @param \Symfony\Component\Finder\SplFileInfo $fileInfo
      * @param string $content
      *

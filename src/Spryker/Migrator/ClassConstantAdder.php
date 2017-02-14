@@ -14,19 +14,6 @@ class ClassConstantAdder extends AbstractMigrator
 {
 
     /**
-     * @var array
-     */
-    protected $configuration;
-
-    /**
-     * @param $configuration
-     */
-    public function __construct($configuration)
-    {
-        $this->configuration = $configuration;
-    }
-
-    /**
      * @param \Symfony\Component\Finder\SplFileInfo $fileInfo
      * @param string $content
      *

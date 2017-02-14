@@ -29,26 +29,6 @@ class ConstantRemoved extends AbstractMigrator
     const MESSAGE_PATTERN = 'Constant "<fg=green>%s</>" is removed from core but was found';
 
     /**
-     * @var array
-     */
-    protected $configuration;
-
-    /**
-     * @var string
-     */
-    protected $messagePattern;
-
-    /**
-     * @param array $configuration
-     * @param string $messagePattern
-     */
-    public function __construct(array $configuration, $messagePattern = self::MESSAGE_PATTERN)
-    {
-        $this->configuration = $configuration;
-        $this->messagePattern = $messagePattern;
-    }
-
-    /**
      * @param \Symfony\Component\Finder\SplFileInfo $fileInfo
      * @param string $content
      *
@@ -91,7 +71,7 @@ class ConstantRemoved extends AbstractMigrator
      */
     protected function outputConstantRemovedMessage($constant, SplFileInfo $fileInfo)
     {
-        $message = sprintf(self::MESSAGE_PATTERN, $constant);
+        $message = sprintf(static::MESSAGE_PATTERN, $constant);
         $this->outputMessage($message);
 
         if (isset($this->configuration[$constant])) {

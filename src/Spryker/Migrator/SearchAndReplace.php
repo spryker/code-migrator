@@ -23,19 +23,6 @@ class SearchAndReplace extends AbstractMigrator
     const MESSAGE_TEMPLATE_REPLACED = 'Replaced "<fg=green>%s</>" with "<fg=green>%s</>"';
 
     /**
-     * @var array
-     */
-    protected $configuration;
-
-    /**
-     * @param array $configuration
-     */
-    public function __construct(array $configuration)
-    {
-        $this->configuration = $configuration;
-    }
-
-    /**
      * @param \Symfony\Component\Finder\SplFileInfo $fileInfo
      * @param string $content
      *

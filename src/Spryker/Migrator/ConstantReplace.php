@@ -8,7 +8,9 @@
 namespace Spryker\Migrator;
 
 use Spryker\AbstractMigrator;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\SplFileInfo;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * Specification:
@@ -31,11 +33,6 @@ class ConstantReplace extends AbstractMigrator
     const MESSAGE_TEMPLATE_ADDED_USE = 'Added new use statement "<fg=green>use %s;</>" after "<fg=green>use %s;</>"';
 
     /**
-     * @var array
-     */
-    protected $configuration;
-
-    /**
      * @var string
      */
     protected $addUseAfter;
@@ -44,14 +41,6 @@ class ConstantReplace extends AbstractMigrator
      * @var string
      */
     protected $newUse;
-
-    /**
-     * @param array $configuration
-     */
-    public function __construct(array $configuration)
-    {
-        $this->configuration = $configuration;
-    }
 
     /**
      * @param \Symfony\Component\Finder\SplFileInfo $fileInfo

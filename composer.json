@@ -2,7 +2,10 @@
   "name": "spryker/code-updater",
   "require": {
     "symfony/console": "^3.0.0",
-    "symfony/finder": "^3.0.0"
+    "symfony/filesystem": "^3.2",
+    "symfony/finder": "^3.0.0",
+    "symfony/var-dumper": "^3.2",
+    "symfony/yaml": "^3.2"
   },
   "require-dev": {
     "spryker/code-sniffer": "*",

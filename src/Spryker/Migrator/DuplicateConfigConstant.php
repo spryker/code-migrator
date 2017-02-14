@@ -33,19 +33,6 @@ class DuplicateConfigConstant extends AbstractMigrator
     const MESSAGE_TEMPLATE_INFO = 'Found "<fg=green>%s</>" in "<fg=green>%s</>"' . PHP_EOL . 'If you use the following bundle then i can update the mentioned file';
 
     /**
-     * @var array
-     */
-    protected $configuration;
-
-    /**
-     * @param array $configuration
-     */
-    public function __construct(array $configuration)
-    {
-        $this->configuration = $configuration;
-    }
-
-    /**
      * @param \Symfony\Component\Finder\SplFileInfo $fileInfo
      * @param string $content
      *

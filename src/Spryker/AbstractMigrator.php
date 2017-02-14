@@ -11,13 +11,20 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\SplFileInfo;
+use Symfony\Component\Yaml\Yaml;
 
 abstract class AbstractMigrator
 {
 
     const MESSAGE_TEMPLATE_FILE_NAME = '<fg=yellow>%s</>';
     const MESSAGE_MANUALLY = '<fg=red>You need to check this manually</>';
+
+    /**
+     * @var array
+     */
+    protected $configuration;
 
     /**
      * @var InputInterface
@@ -33,6 +40,14 @@ abstract class AbstractMigrator
      * @var Command
      */
     protected $command;
+
+    /**
+     * @param array $configuration
+     */
+    public function __construct(array $configuration)
+    {
+        $this->configuration = $configuration;
+    }
 
     /**
      * @param \Symfony\Component\Console\Input\InputInterface $input

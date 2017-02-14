@@ -13,6 +13,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
+use Symfony\Component\Yaml\Yaml;
 
 class MigratorCommand extends Command
 {
@@ -67,6 +68,28 @@ class MigratorCommand extends Command
     }
 
     /**
+     * @param \Symfony\Component\Console\Input\InputInterface $input
+     * @param \Symfony\Component\Console\Output\OutputInterface $output
+     *
+     * @return void
+     */
+    protected function initialize(InputInterface $input, OutputInterface $output)
+    {
+        $finder = new Finder();
+        $finder->in(__DIR__ . '/../../../config/project');
+
+        foreach ($finder as $fileInfo) {
+            $ymlConfig = Yaml::parse($fileInfo->getContents());
+            $className = array_keys($ymlConfig)[0];
+            $configuration = array_values($ymlConfig)[0];
+
+            $migratorClass = new $className($configuration);
+            $this->addMigrator($migratorClass);
+        }
+    }
+
+
+    /**
      * @return \Symfony\Component\Finder\Finder
      */
     protected function getFinder()
@@ -90,7 +113,7 @@ class MigratorCommand extends Command
      *
      * @return $this
      */
-    public function addUpdater(AbstractMigrator $updater)
+    public function addMigrator(AbstractMigrator $updater)
     {
         $this->updater[] = $updater;
 

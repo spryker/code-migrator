@@ -18,13 +18,14 @@ use Spryker\Migrator\SearchAndReplace;
 use Symfony\Component\Console\Application;
 use Spryker\Migrator\ConstantReplace;
 use Spryker\Command\MigratorCommand;
+use Symfony\Component\Yaml\Yaml;
 
 $updaterCommand = new MigratorCommand();
 
 /**
  * Constants to replace
  */
-$constantReplace = new ConstantReplace([
+$configuration = [
     'ApplicationConstants::PROJECT_NAMESPACE' => 'KernelConstants::PROJECT_NAMESPACE',
     'ApplicationConstants::APPLICATION_SPRYKER_ROOT' => 'KernelConstants::SPRYKER_ROOT',
     'ApplicationConstants::CORE_NAMESPACES' => 'KernelConstants::CORE_NAMESPACES',
@@ -47,7 +48,9 @@ $constantReplace = new ConstantReplace([
     'ApplicationConstants::ZED_API_SSL_ENABLED' => 'ZedRequestConstants::ZED_API_SSL_ENABLED',
     'ApplicationConstants::ZED_SHOW_EXCEPTION_STACK_TRACE' => 'ErrorHandlerConstants::ERROR_RENDERER',
     'ApplicationConstants::YVES_SHOW_EXCEPTION_STACK_TRACE' => 'ErrorHandlerConstants::ERROR_RENDERER',
-]);
+];
+
+$constantReplace = new ConstantReplace($configuration);
 
 /**
  * Constants removed
@@ -447,7 +450,7 @@ $methodAdder = new ClassMethodAdder([
     }'
     ],
 ]);
-$updaterCommand->addUpdater($methodAdder);
+$updaterCommand->addMigrator($methodAdder);
 
 $duplicateConstantUpdater = new DuplicateConfigConstant([
     'ApplicationConstants::HOST_YVES' => [
@@ -471,7 +474,6 @@ $duplicateConstantUpdater = new DuplicateConfigConstant([
     ],
 ]);
 
-$updaterCommand->addUpdater($constantAdder);
 
 /**
  * Files which match fileNamePattern will be removed after user confirms
@@ -483,14 +485,15 @@ $removeFile = new RemoveFile([
     'Pyz/Yves/Product/Plugin/TwigProductImagePlugin.php',
 ]);
 
-$updaterCommand->addUpdater($constantReplace);
-$updaterCommand->addUpdater($constantRemoved);
-$updaterCommand->addUpdater($searchAndReplace);
-$updaterCommand->addUpdater($searchAndRemove);
-$updaterCommand->addUpdater($useFinder);
-$updaterCommand->addUpdater($missingCodeFinder);
-$updaterCommand->addUpdater($duplicateConstantUpdater);
-$updaterCommand->addUpdater($removeFile);
+//$updaterCommand->addMigrator($constantAdder);
+//$updaterCommand->addMigrator($constantReplace);
+//$updaterCommand->addMigrator($constantRemoved);
+//$updaterCommand->addMigrator($searchAndReplace);
+//$updaterCommand->addMigrator($searchAndRemove);
+//$updaterCommand->addMigrator($useFinder);
+//$updaterCommand->addMigrator($missingCodeFinder);
+//$updaterCommand->addMigrator($duplicateConstantUpdater);
+//$updaterCommand->addMigrator($removeFile);
 
 $application = new Application();
 $application->add($updaterCommand);
