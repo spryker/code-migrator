@@ -7,6 +7,7 @@ return [
         [
             MissingCodeFinder::OPTION_SEARCH => '$container = $this->addUtilDateTimeService($container);',
             MissingCodeFinder::OPTION_CODE => '$container = $this->addUtilDateTimeService($container);',
+            MissingCodeFinder::OPTION_MESSAGE => 'Add this code in your "provideDependencies()" method',
         ],
     ],
     'Pyz/Zed/Application/ApplicationDependencyProvider.php' => [
@@ -53,10 +54,15 @@ return [
             MissingCodeFinder::OPTION_MESSAGE => 'Add this to the "getCheckoutPostHooks()" method',
         ],
     ],
-    'CategoryNodeCollector.php' => [
+    'Pyz/Zed/Collector/Business/Search/CategoryNodeCollector.php' => [
         [
             MissingCodeFinder::OPTION_SEARCH => 'parent::__construct($utilDataReaderService);',
             MissingCodeFinder::OPTION_CODE => 'parent::__construct($utilDataReaderService);',
+        ],
+        [
+            MissingCodeFinder::OPTION_SEARCH => 'UtilDataReaderServiceInterface $utilDataReaderService,',
+            MissingCodeFinder::OPTION_CODE => 'UtilDataReaderServiceInterface $utilDataReaderService,',
+            MissingCodeFinder::OPTION_MESSAGE => 'Add this to your constructor and make sure the factory injects it',
         ],
     ],
     'CmsPageCollector.php' => [
@@ -64,11 +70,21 @@ return [
             MissingCodeFinder::OPTION_SEARCH => 'parent::__construct($utilDataReaderService);',
             MissingCodeFinder::OPTION_CODE => 'parent::__construct($utilDataReaderService);',
         ],
+        [
+            MissingCodeFinder::OPTION_SEARCH => 'UtilDataReaderServiceInterface $utilDataReaderService,',
+            MissingCodeFinder::OPTION_CODE => 'UtilDataReaderServiceInterface $utilDataReaderService,',
+            MissingCodeFinder::OPTION_MESSAGE => 'Add this to your constructor and make sure the factory injects it',
+        ],
     ],
     'ProductCollector.php' => [
         [
             MissingCodeFinder::OPTION_SEARCH => 'parent::__construct($utilDataReaderService);',
             MissingCodeFinder::OPTION_CODE => 'parent::__construct($utilDataReaderService);',
+        ],
+        [
+            MissingCodeFinder::OPTION_SEARCH => 'UtilDataReaderServiceInterface $utilDataReaderService,',
+            MissingCodeFinder::OPTION_CODE => 'UtilDataReaderServiceInterface $utilDataReaderService,',
+            MissingCodeFinder::OPTION_MESSAGE => 'Add this to your constructor and make sure the factory injects it',
         ],
     ],
     'AttributeMapCollector.php' => [
@@ -76,11 +92,21 @@ return [
             MissingCodeFinder::OPTION_SEARCH => 'parent::__construct($utilDataReaderService);',
             MissingCodeFinder::OPTION_CODE => 'parent::__construct($utilDataReaderService);',
         ],
+        [
+            MissingCodeFinder::OPTION_SEARCH => 'UtilDataReaderServiceInterface $utilDataReaderService,',
+            MissingCodeFinder::OPTION_CODE => 'UtilDataReaderServiceInterface $utilDataReaderService,',
+            MissingCodeFinder::OPTION_MESSAGE => 'Add this to your constructor and make sure the factory injects it',
+        ],
     ],
     'ProductAbstractCollector.php' => [
         [
             MissingCodeFinder::OPTION_SEARCH => 'parent::__construct($utilDataReaderService);',
             MissingCodeFinder::OPTION_CODE => 'parent::__construct($utilDataReaderService);',
+        ],
+        [
+            MissingCodeFinder::OPTION_SEARCH => 'UtilDataReaderServiceInterface $utilDataReaderService,',
+            MissingCodeFinder::OPTION_CODE => 'UtilDataReaderServiceInterface $utilDataReaderService,',
+            MissingCodeFinder::OPTION_MESSAGE => 'Add this to your constructor and make sure the factory injects it',
         ],
     ],
     'ProductConcreteCollector.php' => [
@@ -88,21 +114,27 @@ return [
             MissingCodeFinder::OPTION_SEARCH => 'parent::__construct($utilDataReaderService);',
             MissingCodeFinder::OPTION_CODE => 'parent::__construct($utilDataReaderService);',
         ],
+        [
+            MissingCodeFinder::OPTION_SEARCH => 'UtilDataReaderServiceInterface $utilDataReaderService,',
+            MissingCodeFinder::OPTION_CODE => 'UtilDataReaderServiceInterface $utilDataReaderService,',
+            MissingCodeFinder::OPTION_MESSAGE => 'Add this to your constructor and make sure the factory injects it',
+        ],
     ],
     'Pyz/Zed/Collector/CollectorDependencyProvider.php' => [
         [
-            MissingCodeFinder::OPTION_SEARCH => '$container[self::SERVICE_DATA] = function (Container $container) {\' => ',
-            MissingCodeFinder::OPTION_CODE => '$container[self::SERVICE_DATA] = function (Container $container) {
+            MissingCodeFinder::OPTION_SEARCH => '$container[static::SERVICE_DATA] = function (Container $container) {',
+            MissingCodeFinder::OPTION_CODE => '$container[static::SERVICE_DATA] = function (Container $container) {
     return $container->getLocator()->utilDataReader()->service();
 };',
         ],
     ],
     'Pyz/Zed/Updater/UpdaterDependencyProvider.php' => [
         [
-            MissingCodeFinder::OPTION_SEARCH => '$container[static::SERVICE_UTIL_IO] = function (Container $container) {\' => ',
+            MissingCodeFinder::OPTION_SEARCH => '$container[static::SERVICE_UTIL_IO] = function (Container $container) {',
             MissingCodeFinder::OPTION_CODE => '$container[static::SERVICE_UTIL_IO] = function (Container $container) {
     return $container->getLocator()->utilDataReader()->service();
 };',
+            MissingCodeFinder::OPTION_MESSAGE => 'Add this to your "provideBusinessLayerDependencies()" method'
         ],
     ],
     'ProductStockUpdater.php' => [
@@ -121,6 +153,7 @@ return [
 $container[static::SERVICE_DATA] = function (Container $container) {
     return $container->getLocator()->utilDataReader()->service();
 };',
+            MissingCodeFinder::OPTION_MESSAGE => 'Add this to your "provideBusinessLayerDependencies()" method'
         ],
     ],
 ];

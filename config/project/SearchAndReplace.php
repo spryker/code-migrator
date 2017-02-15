@@ -115,4 +115,5 @@ return [
     '$bootstrap = new ZedBootstrap();' => '$errorHandlerEnvironment = new ErrorHandlerEnvironment();' . PHP_EOL . '$errorHandlerEnvironment->initialize();' . PHP_EOL . PHP_EOL . '$bootstrap = new ZedBootstrap();',
     'return new DateFormatterTwigExtension($this->createDateFormatter());' => 'return new DateTimeFormatterTwigExtension($this->getUtilDateTimeService());',
     'class NewRelicDependencyProvider' => 'use Spryker\Yves\Kernel\Container;' . PHP_EOL . PHP_EOL . 'class NewRelicDependencyProvider',
+    'return new CsvBatchIterator($this->getFilename());' => 'return $this->utilDataReaderService->getCsvBatchIterator($this->getFilename());',
 ];
