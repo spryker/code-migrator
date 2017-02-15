@@ -126,6 +126,7 @@ return [
             MissingCodeFinder::OPTION_CODE => '$container[static::SERVICE_DATA] = function (Container $container) {
     return $container->getLocator()->utilDataReader()->service();
 };',
+            MissingCodeFinder::OPTION_MESSAGE => 'Add this to your "provideBusinessLayerDependencies()" method'
         ],
     ],
     'Zed/Updater/UpdaterDependencyProvider.php' => [

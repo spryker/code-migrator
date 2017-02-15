@@ -196,11 +196,14 @@ class MigratorCommand extends Command
         return ($this->input->hasOption(static::OPTION_DRY) && $this->input->getOption(static::OPTION_DRY));
     }
 
+    /**
+     * @param \Symfony\Component\Console\Input\InputInterface $input
+     *
+     * @return void
+     */
     private function defineProjectNamespace(InputInterface $input)
     {
         define('PROJECT_NAMESPACE', $input->getOption(static::OPTION_PROJECT_NAMESPACE));
-
-        echo '<pre>' . PHP_EOL . \Symfony\Component\VarDumper\VarDumper::dump(PROJECT_NAMESPACE) . PHP_EOL . 'Line: ' . __LINE__ . PHP_EOL . 'File: ' . __FILE__ . die();
     }
 
 }

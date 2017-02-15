@@ -22,6 +22,9 @@ class ClassUseStatementAdder extends AbstractMigrator
     public function execute(SplFileInfo $fileInfo, $content)
     {
         foreach ($this->configuration as $fileNamePattern => $useStatementCollection) {
+            if (strpos($fileInfo->getPathname(), $fileNamePattern) === false) {
+                continue;
+            }
             foreach ($useStatementCollection as $useStatement) {
                 $content = $this->addUseStatementToFile($useStatement, $content, $fileInfo);
             }
