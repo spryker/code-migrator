@@ -1,7 +1,6 @@
 <?php
 
 define('PROJECT_ROOT', realpath(__DIR__ . '/../../../../'));
-define('PROJECT_NAMESPACE', 'Pyz');
 
 require_once PROJECT_ROOT . '/vendor/autoload.php';
 require_once __DIR__ . '/../vendor/autoload.php';

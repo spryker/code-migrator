@@ -84,7 +84,7 @@ return [
         return $this->getApplication()->render($viewPath, $parameters);
     }'
     ],
-    'Pyz/Yves/Application/ApplicationDependencyProvider.php' => [
+    'Yves/Application/ApplicationDependencyProvider.php' => [
         'protected function addUtilDateTimeService(Container $container)' => '    /**
      * @param \Spryker\Yves\Kernel\Container $container
      *

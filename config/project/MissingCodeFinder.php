@@ -3,14 +3,14 @@
 use Spryker\Migrator\MissingCodeFinder;
 
 return [
-    'Pyz/Yves/Application/ApplicationDependencyProvider.php' => [
+    'Yves/Application/ApplicationDependencyProvider.php' => [
         [
             MissingCodeFinder::OPTION_SEARCH => '$container = $this->addUtilDateTimeService($container);',
             MissingCodeFinder::OPTION_CODE => '$container = $this->addUtilDateTimeService($container);',
             MissingCodeFinder::OPTION_MESSAGE => 'Add this code in your "provideDependencies()" method',
         ],
     ],
-    'Pyz/Zed/Application/ApplicationDependencyProvider.php' => [
+    'Zed/Application/ApplicationDependencyProvider.php' => [
         [
             MissingCodeFinder::OPTION_SEARCH => 'new RedirectAfterLoginProvider()',
             MissingCodeFinder::OPTION_CODE => 'new RedirectAfterLoginProvider(),',
@@ -47,14 +47,14 @@ return [
             MissingCodeFinder::OPTION_MESSAGE => 'Add this to the "getServiceProvider()" method',
         ],
     ],
-    'Pyz/Zed/Checkout/CheckoutDependencyProvider.php' => [
+    'Zed/Checkout/CheckoutDependencyProvider.php' => [
         [
             MissingCodeFinder::OPTION_SEARCH => 'new OmsPostSaveHookPlugin()',
             MissingCodeFinder::OPTION_CODE => 'new OmsPostSaveHookPlugin(),',
             MissingCodeFinder::OPTION_MESSAGE => 'Add this to the "getCheckoutPostHooks()" method',
         ],
     ],
-    'Pyz/Zed/Collector/Business/Search/CategoryNodeCollector.php' => [
+    'Zed/Collector/Business/Search/CategoryNodeCollector.php' => [
         [
             MissingCodeFinder::OPTION_SEARCH => 'parent::__construct($utilDataReaderService);',
             MissingCodeFinder::OPTION_CODE => 'parent::__construct($utilDataReaderService);',
@@ -120,7 +120,7 @@ return [
             MissingCodeFinder::OPTION_MESSAGE => 'Add this to your constructor and make sure the factory injects it',
         ],
     ],
-    'Pyz/Zed/Collector/CollectorDependencyProvider.php' => [
+    'Zed/Collector/CollectorDependencyProvider.php' => [
         [
             MissingCodeFinder::OPTION_SEARCH => '$container[static::SERVICE_DATA] = function (Container $container) {',
             MissingCodeFinder::OPTION_CODE => '$container[static::SERVICE_DATA] = function (Container $container) {
@@ -128,7 +128,7 @@ return [
 };',
         ],
     ],
-    'Pyz/Zed/Updater/UpdaterDependencyProvider.php' => [
+    'Zed/Updater/UpdaterDependencyProvider.php' => [
         [
             MissingCodeFinder::OPTION_SEARCH => '$container[static::SERVICE_UTIL_IO] = function (Container $container) {',
             MissingCodeFinder::OPTION_CODE => '$container[static::SERVICE_UTIL_IO] = function (Container $container) {

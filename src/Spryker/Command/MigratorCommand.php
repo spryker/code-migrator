@@ -10,6 +10,7 @@ namespace Spryker\Command;
 use Spryker\AbstractMigrator;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
@@ -22,6 +23,9 @@ class MigratorCommand extends Command
 
     const OPTION_CORE = 'core';
     const OPTION_CORE_SHORT = 'c';
+
+    const OPTION_PROJECT_NAMESPACE = 'project-namespace';
+    const OPTION_PROJECT_NAMESPACE_SHORT = 'p';
 
     /**
      * @var \Symfony\Component\Console\Input\InputInterface
@@ -47,7 +51,8 @@ class MigratorCommand extends Command
             ->setName('spryker:migrate')
             ->setDescription('Migrates code to the latest changes made by Spryker.')
             ->addOption(static::OPTION_DRY, static::OPTION_DRY_SHORT, null, 'Use this option to see what will be changed.')
-            ->addOption(static::OPTION_CORE, static::OPTION_CORE_SHORT, null, 'Use this option to check core code.');
+            ->addOption(static::OPTION_CORE, static::OPTION_CORE_SHORT, null, 'Use this option to check core code.')
+            ->addOption(static::OPTION_PROJECT_NAMESPACE, static::OPTION_PROJECT_NAMESPACE_SHORT, InputOption::VALUE_OPTIONAL, 'If you have a different namespace then Pyz in your project change it with this option', 'Pyz');
     }
 
     /**
@@ -78,6 +83,7 @@ class MigratorCommand extends Command
      */
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
+        $this->defineProjectNamespace($input);
         $path = __DIR__ . '/../../../config/';
         if ($input->hasOption(static::OPTION_CORE) && $input->getOption(static::OPTION_CORE)) {
             $path .= 'core/';
@@ -188,6 +194,13 @@ class MigratorCommand extends Command
     protected function isDryRun()
     {
         return ($this->input->hasOption(static::OPTION_DRY) && $this->input->getOption(static::OPTION_DRY));
+    }
+
+    private function defineProjectNamespace(InputInterface $input)
+    {
+        define('PROJECT_NAMESPACE', $input->getOption(static::OPTION_PROJECT_NAMESPACE));
+
+        echo '<pre>' . PHP_EOL . \Symfony\Component\VarDumper\VarDumper::dump(PROJECT_NAMESPACE) . PHP_EOL . 'Line: ' . __LINE__ . PHP_EOL . 'File: ' . __FILE__ . die();
     }
 
 }
