@@ -14,7 +14,7 @@ After that you need to install all it's dependencies by running
 composer install
 ```
 
-You can test it by running `vendor/bin/codeception run`
+You can test it by running `vendor/bin/codecept run`
 
 
 ## Documentation
