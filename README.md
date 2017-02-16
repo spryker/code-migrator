@@ -19,10 +19,10 @@ You can test it by running `vendor/bin/codecept run`
 
 ## Documentation
 
-To run the updater go to the cloned repository and execute
+To run the updater go to the root directory of you project and execute
 
 ```
-vendor/bin/migrate spryker:migrate -h
+php vendor/spryker/code-migrator/src/index.php spryker:migrate -h
 ```
 
 The `-h` option will show you how to configure and use this command.
@@ -36,7 +36,7 @@ Important options are:
 To see what will be changed execute:
 
 ```
-vendor/bin/migrate spryker:migrate -d -n
+php vendor/spryker/code-migrator/src/index.php spryker:migrate -d -n
 ```
 
 This runs the command in dry and non-interactive mode and will print out what it will do.
@@ -45,7 +45,7 @@ This runs the command in dry and non-interactive mode and will print out what it
 Run it on a project with a project namespace different to "Pyz":
 
 ```
-vendor/bin/migrate spryker:migrate -d -n -p CatFace
+php vendor/spryker/code-migrator/src/index.php spryker:migrate -d -n -p CatFace
 ```
 
 This will then use "CatFace" as your project namespace.
@@ -54,9 +54,42 @@ This will then use "CatFace" as your project namespace.
 Run it finally:
 
 ```
-vendor/bin/migrate spryker:migrate
+php vendor/spryker/code-migrator/src/index.php spryker:migrate
 ```
 
 After doing the manually steps you should be able to run your tests, setup install and to buy something in the shop.
 
 Please make sure that EVERYTHING goes through QA!
+
+
+Known problems which cant be fixed or cant be found currently:
+
+```
+Propel\Runtime\Exception\RuntimeException - No connection defined for database "zed". Did you forget to define a connection or is it wrong written?
+```
+
+You need to add `new PropelServiceProvider(),` to `ApplicationDependencyProvider::getServiceProvider()` it is used in one place of this class and therefore not shown as missing.
+
+----------------------------
+
+```
+Twig_Error_Syntax - Unknown "formatDateTime" filter.
+```
+
+You need to add `new DateTimeFormatterServiceProvider(),` to `ApplicationDependencyProvider::getServiceProvider()` it is used in one place of this class and therefore not shown as missing.
+
+----------------------------
+
+
+Any Twig related exception:
+
+You need to add `new GuiTwigExtensionServiceProvider(),` to `ApplicationDependencyProvider::getServiceProvider()` it is used in one place of this class and therefore not shown as missing.
+
+----------------------------
+
+
+
+Translation on Zed side needs another plugin then this provided from Messenger bundle. If you don't have a MessengerDependencyProvider in your project add one add overwrite `addTranslationPlugin()` and use `Spryker\Zed\Glossary\Communication\Plugin\TranslationPlugin`
+
+
+

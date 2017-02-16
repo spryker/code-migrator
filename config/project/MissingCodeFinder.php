@@ -46,6 +46,11 @@ return [
             MissingCodeFinder::OPTION_CODE => 'new PropelServiceProvider(),',
             MissingCodeFinder::OPTION_MESSAGE => 'Add this to the "getServiceProvider()" method',
         ],
+        [
+            MissingCodeFinder::OPTION_SEARCH => 'new MessengerServiceProvider()',
+            MissingCodeFinder::OPTION_CODE => 'new MessengerServiceProvider(),',
+            MissingCodeFinder::OPTION_MESSAGE => 'Add this to the "getServiceProvider()" method',
+        ],
     ],
     'Zed/Checkout/CheckoutDependencyProvider.php' => [
         [
@@ -155,6 +160,27 @@ $container[static::SERVICE_DATA] = function (Container $container) {
     return $container->getLocator()->utilDataReader()->service();
 };',
             MissingCodeFinder::OPTION_MESSAGE => 'Add this to your "provideBusinessLayerDependencies()" method'
+        ],
+    ],
+    'Zed/Importer/Business/Factory/InstallerFactory.php' => [
+        [
+            MissingCodeFinder::OPTION_SEARCH => '$this->getUtilDataReaderService(),',
+            MissingCodeFinder::OPTION_CODE => '$this->getUtilDataReaderService(),',
+            MissingCodeFinder::OPTION_MESSAGE => 'Add this to all installer in this class'
+        ],
+    ],
+    'Zed/Importer/Business/Installer/AbstractInstaller.php' => [
+        [
+            MissingCodeFinder::OPTION_SEARCH => '$this->utilDataReaderService = $utilDataReaderService;',
+            MissingCodeFinder::OPTION_CODE => '$this->utilDataReaderService = $utilDataReaderService;',
+            MissingCodeFinder::OPTION_MESSAGE => 'Add this to the constructor of this class'
+        ],
+        [
+            MissingCodeFinder::OPTION_SEARCH => 'protected $utilDataReaderService;',
+            MissingCodeFinder::OPTION_CODE => '    /**
+     * @var \Spryker\Service\UtilDataReader\UtilDataReaderService
+     */
+    protected $utilDataReaderService;',
         ],
     ],
 ];

@@ -8,6 +8,7 @@ return [
         'use Spryker\Zed\Navigation\Communication\Plugin\ServiceProvider\NavigationServiceProvider;',
         'use Spryker\Zed\NewRelic\Communication\Plugin\ServiceProvider\NewRelicRequestTransactionServiceProvider;',
         'use Spryker\Zed\Application\Communication\Plugin\ServiceProvider\TranslationServiceProvider;',
+        'use Spryker\Zed\Messenger\Communication\Plugin\ServiceProvider\MessengerServiceProvider;',
     ],
     'Zed/Collector/Business/Storage/ProductConcreteCollector.php' => [
         'use Spryker\Service\UtilDataReader\UtilDataReaderServiceInterface;',
@@ -29,5 +30,14 @@ return [
     ],
     'Zed/Checkout/CheckoutDependencyProvider.php' => [
         'use Spryker\Zed\Oms\Communication\Plugin\Checkout\OmsPostSaveHookPlugin;',
+    ],
+    'Zed/Console/ConsoleDependencyProvider.php' => [
+        'use Spryker\Zed\NewRelic\Communication\Plugin\NewRelicConsolePlugin;',
+    ],
+    'Zed/Importer/Business/Factory/InstallerFactory.php' => [
+        'use ' . PROJECT_NAMESPACE . '\Zed\Importer\ImporterDependencyProvider;',
+    ],
+    'Zed/Importer/Business/Installer/AbstractInstaller.php' => [
+        'use Spryker\Service\UtilDataReader\UtilDataReaderServiceInterface;',
     ],
 ];
