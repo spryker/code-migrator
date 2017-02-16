@@ -74,5 +74,5 @@ return [
     'use Spryker\Shared\Library\Application\Environment as ApplicationEnvironment;' => 'use Spryker\Shared\Config\Application\Environment as ApplicationEnvironment;',
     'use Spryker\Zed\Kernel\Communication\Plugin\GatewayControllerListenerPlugin;' => 'use Spryker\Zed\ZedRequest\Communication\Plugin\GatewayControllerListenerPlugin;',
     'use Spryker\Zed\Kernel\Communication\Plugin\GatewayServiceProviderPlugin;' => 'use Spryker\Zed\ZedRequest\Communication\Plugin\GatewayServiceProviderPlugin;',
-    'use Spryker\Zed\Application\Communication\Console\BuildNavigationConsole;' => 'use Spryker\Zed\Navigation\Communication\Console\BuildNavigationConsole;',
+    'use Spryker\Zed\Application\Communication\Console\BuildNavigationConsole;' => 'use Spryker\Zed\ZedNavigation\Communication\Console\BuildNavigationConsole;',
 ];

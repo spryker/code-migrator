@@ -37,8 +37,8 @@ return [
             MissingCodeFinder::OPTION_MESSAGE => 'Add this to the "getServiceProvider()" method',
         ],
         [
-            MissingCodeFinder::OPTION_SEARCH => 'new NavigationServiceProvider()',
-            MissingCodeFinder::OPTION_CODE => 'new NavigationServiceProvider(),',
+            MissingCodeFinder::OPTION_SEARCH => 'new ZedNavigationServiceProvider()',
+            MissingCodeFinder::OPTION_CODE => 'new ZedNavigationServiceProvider(),',
             MissingCodeFinder::OPTION_MESSAGE => 'Add this to the "getServiceProvider()" method',
         ],
         [

@@ -14,7 +14,7 @@ return [
     'ApplicationConstants::STORE_PREFIX' => 'KernelConstants::STORE_PREFIX',
     'ApplicationConstants::ZED_TWIG_OPTIONS' => 'TwigConstants::ZED_TWIG_OPTIONS',
     'ApplicationConstants::YVES_TWIG_OPTIONS' => 'TwigConstants::YVES_TWIG_OPTIONS',
-    'ApplicationConstants::NAVIGATION_CACHE_ENABLED' => 'NavigationConstants::NAVIGATION_CACHE_ENABLED',
+    'ApplicationConstants::NAVIGATION_CACHE_ENABLED' => 'ZedNavigationConstants::ZED_NAVIGATION_CACHE_ENABLED',
     'ApplicationConstants::LOG_LEVEL' => 'LogConstants::LOG_LEVEL',
     'ApplicationConstants::YVES_ERROR_PAGE' => 'ErrorHandlerConstants::YVES_ERROR_PAGE',
     'ApplicationConstants::ZED_ERROR_PAGE' => 'ErrorHandlerConstants::ZED_ERROR_PAGE',

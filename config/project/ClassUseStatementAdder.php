@@ -5,7 +5,7 @@ return [
         'use Spryker\Service\UtilDateTime\ServiceProvider\DateTimeFormatterServiceProvider;',
         'use Spryker\Zed\Auth\Communication\Plugin\ServiceProvider\RedirectAfterLoginProvider;',
         'use Spryker\Zed\Gui\Communication\Plugin\ServiceProvider\GuiTwigExtensionServiceProvider;',
-        'use Spryker\Zed\Navigation\Communication\Plugin\ServiceProvider\NavigationServiceProvider;',
+        'use Spryker\Zed\ZedNavigation\Communication\Plugin\ServiceProvider\ZedNavigationServiceProvider;',
         'use Spryker\Zed\NewRelic\Communication\Plugin\ServiceProvider\NewRelicRequestTransactionServiceProvider;',
         'use Spryker\Zed\Application\Communication\Plugin\ServiceProvider\TranslationServiceProvider;',
         'use Spryker\Zed\Messenger\Communication\Plugin\ServiceProvider\MessengerServiceProvider;',
@@ -38,6 +38,9 @@ return [
         'use ' . PROJECT_NAMESPACE . '\Zed\Importer\ImporterDependencyProvider;',
     ],
     'Zed/Importer/Business/Installer/AbstractInstaller.php' => [
+        'use Spryker\Service\UtilDataReader\UtilDataReaderServiceInterface;',
+    ],
+    'Zed/Updater/Business/Updater/Product/ProductStockUpdater.php' => [
         'use Spryker\Service\UtilDataReader\UtilDataReaderServiceInterface;',
     ],
 ];
