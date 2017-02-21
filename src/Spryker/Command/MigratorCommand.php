@@ -121,10 +121,7 @@ class MigratorCommand extends Command
             $output->writeln('Loading files from core');
         } else {
             $directories = [
-                PROJECT_ROOT . '/public',
-                PROJECT_ROOT . '/src',
-                PROJECT_ROOT . '/config',
-                PROJECT_ROOT . '/tests',
+                PROJECT_ROOT . '/_contents',
             ];
 
             $output->writeln('Loading files from project');
