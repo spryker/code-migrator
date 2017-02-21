@@ -51,6 +51,7 @@ return [
     '@return \Spryker\Zed\Kernel\Communication\Plugin\GatewayServiceProviderPlugin' => '@return \Spryker\Zed\ZedRequest\Communication\Plugin\GatewayServiceProviderPlugin',
     'use Spryker\Zed\Tax\Communication\Plugin\ProductItemTaxRateCalculatorPlugin;' => 'use Spryker\Zed\TaxProductConnector\Communication\Plugin\ProductItemTaxRateCalculatorPlugin;',
     'use Spryker\Zed\Console\Business\Model\Console as SprykerConsole;' => 'use Spryker\Zed\Kernel\Communication\Console\Console as SprykerConsole;',
+    'use Spryker\Zed\Console\Business\Model\Console;' => 'use Spryker\Zed\Kernel\Communication\Console\Console;',
     'use Spryker\Zed\Propel\Communication\Plugin\Connection;' => 'use Propel\Runtime\Propel;',
     'return (new Connection())->get();' => 'return Propel::getConnection();',
     '@return \Spryker\Zed\Installer\Communication\Plugin\AbstractInstallerPlugin' => '@return \Spryker\Zed\Installer\Dependency\Plugin\InstallerPluginInterface',
@@ -75,4 +76,5 @@ return [
     'use Spryker\Zed\Kernel\Communication\Plugin\GatewayControllerListenerPlugin;' => 'use Spryker\Zed\ZedRequest\Communication\Plugin\GatewayControllerListenerPlugin;',
     'use Spryker\Zed\Kernel\Communication\Plugin\GatewayServiceProviderPlugin;' => 'use Spryker\Zed\ZedRequest\Communication\Plugin\GatewayServiceProviderPlugin;',
     'use Spryker\Zed\Application\Communication\Console\BuildNavigationConsole;' => 'use Spryker\Zed\ZedNavigation\Communication\Console\BuildNavigationConsole;',
+    'use Spryker\Shared\Url\Url;' => 'use Spryker\Service\UtilText\Model\Url\Url;',
 ];

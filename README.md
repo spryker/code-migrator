@@ -92,4 +92,4 @@ You need to add `new GuiTwigExtensionServiceProvider(),` to `ApplicationDependen
 Translation on Zed side needs another plugin then this provided from Messenger bundle. If you don't have a MessengerDependencyProvider in your project add one add overwrite `addTranslationPlugin()` and use `Spryker\Zed\Glossary\Communication\Plugin\TranslationPlugin`
 
 
-
+User bundle needs to get GroupPlugin from Acl bundle injected. You need to create a UserDependencyProvider and override the `addGroupPlugin()` method which then returns Acl's GroupPlugin instead of the one from User.

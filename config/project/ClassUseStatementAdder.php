@@ -43,4 +43,8 @@ return [
     'Zed/Updater/Business/Updater/Product/ProductStockUpdater.php' => [
         'use Spryker\Service\UtilDataReader\UtilDataReaderServiceInterface;',
     ],
+    'Zed/Application/Communication/ZedBootstrap.php' => [
+        'use Spryker\Shared\Config\Config;',
+        'use Spryker\Shared\Auth\AuthConstants;',
+    ],
 ];
