@@ -122,6 +122,7 @@ class MigratorCommand extends Command
         } else {
             $directories = [
                 PROJECT_ROOT . '/_contents',
+                PROJECT_ROOT . '/_site',
             ];
 
             $output->writeln('Loading files from project');
