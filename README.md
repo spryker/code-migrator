@@ -32,6 +32,7 @@ Important options are:
 - `-d` running in dry mode 
 - `-p=[PROJECT_NAMESPACE]` change the project namespace
 - `-n` non-interaction mode
+- `-c` run migration on core bundles
 
 To see what will be changed execute:
 
@@ -87,11 +88,14 @@ You need to add `new GuiTwigExtensionServiceProvider(),` to `ApplicationDependen
 
 ----------------------------
 
-
-
 Translation on Zed side needs another plugin then this provided from Messenger bundle. If you don't have a MessengerDependencyProvider in your project add one add overwrite `addTranslationPlugin()` and use `Spryker\Zed\Glossary\Communication\Plugin\TranslationPlugin`
 
+----------------------------
 
 User bundle needs to get GroupPlugin from Acl bundle injected. You need to create a UserDependencyProvider and override the `addGroupPlugin()` method which then returns Acl's GroupPlugin instead of the one from User.
 
+----------------------------
+
 Cart bundle needs to get ItemCountPlugin from ProductBundle bundle injected. You need to create a CartDependencyProvider (Client) and override the `addItemCountPlugin()` method which then returns ProductBundles ItemCountPlugin instead of the one from Cart.
+
+----------------------------
